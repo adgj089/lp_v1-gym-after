@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Y_Gym | プライベートジム</title>
+  <meta name="description" content="忙しい女性のためのプライベート空間。無理せず続けて、変われる私へ。手ぶらで通える無料レンタル、完全個室、マンツーマンの丁寧なサポート。" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' width='64' height='64'%3E%3Crect width='64' height='64' fill='%234d0517'/%3E%3Ctext x='32' y='47' font-family='sans-serif' font-weight='800' font-size='44' fill='%23dfb55c' text-anchor='middle'%3EY%3C/text%3E%3C/svg%3E" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;600;700&family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Serif+SC:wght@300;400;600;700&family=Noto+Serif+Thai:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          heading: ['var(--font-heading)'],
+          body: ['var(--font-body)'],
+        },
+        colors: {
+          brand: {
+            maroon: '#831a34',
+            darkMaroon: '#4A0E0E',
+            lightMaroon: '#630020',
+            pink: '#eedbde',
+            pinkBorder: '#ddbfc2',
+          }
+        }
+      }
+    }
+  }
+</script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.474.0?deps=react@18.3.1",
+    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime"
+  }
+}
+</script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <style type="text/css">
+
+
+
+
+:root {
+  --font-heading: "Playfair Display", "Noto Serif JP", serif;
+  --font-body: "Montserrat", "Noto Sans JP", sans-serif;
+}
+
+/* Language specific font overrides */
+html:lang(ja) {
+  --font-heading: "Playfair Display", "Noto Serif JP", serif;
+  --font-body: "Montserrat", "Noto Sans JP", sans-serif;
+}
+html:lang(en) {
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Montserrat", sans-serif;
+}
+html:lang(zh) {
+  --font-heading: "Noto Serif SC", serif;
+  --font-body: "Noto Sans SC", sans-serif;
+}
+html:lang(ko) {
+  --font-heading: "Noto Serif KR", serif;
+  --font-body: "Noto Sans KR", sans-serif;
+}
+html:lang(fr), html:lang(es) {
+  --font-heading: "Cormorant Garamond", "Playfair Display", serif;
+  --font-body: "Montserrat", sans-serif;
+}
+html:lang(th) {
+  --font-heading: "Noto Serif Thai", serif;
+  --font-body: "Prompt", sans-serif;
+}
+html:lang(vi) {
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Montserrat", sans-serif;
+}
+
+.glass-nav {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.pulse-soft {
+  animation: 2s infinite pulse-soft;
+}
+
+@keyframes pulse-soft {
+  0% { box-shadow: 0 0 0 0 rgba(131, 26, 52, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(131, 26, 52, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(131, 26, 52, 0); }
+}
+
+/* Scroll reveals */
+.reveal {
+  opacity: 0;
+  transition: opacity 1s ease-out, transform 1s ease-out;
+  transform: translateY(30px);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left {
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 1.2s ease-out, transform 1.2s ease-out, filter 1.2s ease-out;
+  transform: translateX(-50px);
+}
+.reveal-left.visible {
+  opacity: 1;
+  filter: none;
+  transform: translateX(0);
+}
+.reveal-right {
+  opacity: 0;
+  filter: blur(4px);
+  transition: opacity 1.2s ease-out, transform 1.2s ease-out, filter 1.2s ease-out;
+  transform: translateX(50px);
+}
+.reveal-right.visible {
+  opacity: 1;
+  filter: none;
+  transform: translateX(0);
+}
+
+/* FAQ transitions */
+.faq-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.faq-item.active .faq-content {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.faq-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.faq-item.active .faq-toggle {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+/* Global Typography styling adjustments */
+h1, h2, h3, h4, h5, h6 {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+  line-break: strict;
+  font-family: var(--font-heading) !important;
+  letter-spacing: 0.1em !important;
+}
+
+body, p {
+  color: #333333;
+  font-family: var(--font-body) !important;
+  line-height: 1.8 !important;
+}
+
+button, a, [role="button"], .faq-toggle {
+  cursor: pointer !important;
+}
+
+.fluid-h1 { font-size: clamp(28px, 8vw, 40px) !important; }
+.fluid-h2 { font-size: clamp(24px, 7vw, 32px) !important; }
+.fluid-h3 { font-size: clamp(20px, 6vw, 26px) !important; }
+.fluid-body { word-break: keep-all; overflow-wrap: anywhere; }
+
+@media (max-width: 768px) {
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance !important;
+  }
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.btn-shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-25deg);
+  transition: left 0.75s ease;
+  z-index: 10;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-shine:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(131, 26, 52, 0.4);
+  }
+  .btn-shine:hover::before {
+    left: 125%;
+  }
+}
+.btn-shine-content {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.nav-link-hover {
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s ease-in-out;
+  transform-origin: center;
+}
+.nav-link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: #831a34;
+  transition: width 0.3s ease-in-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav-link-hover:hover {
+    transform: scale(1.05);
+  }
+  .nav-link-hover:hover::after {
+    width: 100%;
+  }
+}
+
+.sns-link {
+  transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  display: inline-flex;
+}
+.sns-icon {
+  transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .sns-link:hover {
+    transform: scale(1.08) translateY(-3px);
+  }
+  .sns-link:hover .sns-icon {
+    box-shadow: 0 12px 24px -6px rgba(99, 0, 32, 0.45);
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-type="module" data-presets="react" data-plugins="transform-typescript">
+import { createRoot } from 'react-dom/client';
+const languages = [
+  { code: "ja", name: "日本語", flag: "🇯🇵" },
+  { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "zh", name: "简体中文", flag: "🇨🇳" },
+  { code: "ko", name: "한국어", flag: "🇰🇷" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "th", name: "ไทย", flag: "🇹🇭" },
+  { code: "vi", name: "Tiếng Việt", flag: "🇻🇳" }
+];
+
+const translations: Record<string, any> = {
+  ja: {
+    nav: { logo: "Y_Gym", concept: "Concept", features: "Features", pricing: "Pricing", faq: "FAQ", access: "Access", cta: "無料体験を予約する" },
+    hero: { brand: "Matsuyama Boutique Gym", headline: "無理せず続けて、", headlineHighlight: "変われる私へ。", body1: "<span class='inline-block'>運動ゼロでも大丈夫。</span><span class='inline-block'>2ヶ月であの頃の体型へ。</span>", body2: "<span class='inline-block'>忙しい女性のための</span><span class='inline-block'>プライベート空間です。</span>", cta: "無料カウンセリングを予約" },
+    concept: { badge: "CONCEPT", headline: "がんばる毎日に、心地よく寄り添う場所", body1: "<span class='inline-block'>Y_Gymは、</span><span class='inline-block'>ただ汗を流すだけの</span><span class='inline-block'>場所ではありません。</span>", body2: "<span class='inline-block'>心と体をリセットする</span><span class='inline-block'>空間です。</span>", body3: "<span class='inline-block'>完全個室で</span><span class='inline-block'>トレーニングに集中できます。</span>", body4: "<span class='inline-block'>専属トレーナーが、</span><span class='inline-block'>あなたのペースに合わせて</span><span class='inline-block'>サポートいたします。</span>" },
+    reasons: { badge: "Y_Gymの3つの強み", headline: "仕事帰りも手ぶらで。私のままで通える贅沢", r1Title: "<span class='inline-block'>1.&nbsp;</span><span class='inline-block'>手ぶらで通える</span><br class='mobile-br' /><span class='inline-block'>無料レンタル</span>", r1Body: "ウェアやシューズはすべて無料です。<br class='block md:hidden' />仕事帰りにも、気軽に立ち寄れます。", r2Title: "<span class='inline-block'>2.&nbsp;</span><span class='inline-block'>自分磨きに集中できる</span><br class='mobile-br' /><span class='inline-block'>完全個室</span>", r2Body: "周りの目を気にせず、<br class='block md:hidden' />ご利用いただけます。", r3Title: "<span class='inline-block'>3.&nbsp;</span><span class='inline-block'>マンツーマンの</span><br class='mobile-br' /><span class='inline-block'>丁寧なサポート</span>", r3Body1: "プロのトレーナーが、<br class='block md:hidden' />あなたの目標に寄り添います。", r3Body2: "初心者の方も、<br class='block md:hidden' />安心して続けられます。" },
+    pricing: { badge: "PRICING", headline: "まずは無料体験で、気軽にチェック", planStandard: "Standard", planFreeTrial: "Free Trial", planPremium: "Premium", monthly: "月額", perMonth: "/月", firstTimeOnly: "初回限定", recommended: "RECOMMENDED", detail: "詳しく見る", bookFree: "無料で予約する", stdBenefit1: "月4回のパーソナルトレーニング", stdBenefit2: "ベーシック食事指導", freeBenefit1: "丁寧なカウンセリング", freeBenefit2: "体験トレーニング", freeBenefit3: "ウェア・シューズ無料レンタル", premBenefit1: "通い放題（要予約）", premBenefit2: "徹底した毎日の食事サポート", premBenefit3: "プロテイン毎回無料" },
+    faq: { badge: "FAQ", headline: "あなたの疑問に", headlineHighlight: "答えます", q1: "<span class='inline-block'>入会金は</span><span class='inline-block'>かかりますか？</span>", a1: "<span class='inline-block'>はい、通常入会金は</span><span class='inline-block'>33,000円（税込）を</span><span class='inline-block'>いただいております。</span><br class='block md:hidden' /><span class='inline-block'>ただし、体験当日に入会された場合の</span><span class='inline-block'>キャンペーン等もございますので、</span><br class='block md:hidden' /><span class='inline-block'>詳しくはお問い合わせください。</span>", q2: "<span class='inline-block'>予約の変更は</span><span class='inline-block'>可能ですか？</span>", a2: "<span class='inline-block'>前日の18時までに</span><span class='inline-block'>ご連絡いただければ、</span><br class='block md:hidden' /><span class='inline-block'>無料で変更・キャンセルが</span><span class='inline-block'>可能です。</span><br class='block md:hidden' /><span class='inline-block'>それ以降の変更については、</span><br class='block md:hidden' /><span class='inline-block'>セッション1回分を</span><span class='inline-block'>消化させていただく</span><br class='block md:hidden' /><span class='inline-block'>場合がございます。</span>", q3: "<span class='inline-block'>運動に自信が</span><span class='inline-block'>ないのですが、</span><span class='inline-block'>大丈夫ですか？</span>", a3: "<span class='inline-block'>もちろんです。</span><br class='block md:hidden' /><span class='inline-block'>お客様の体力や目標に合わせて</span><span class='inline-block'>メニューを作成しますので、</span><br class='block md:hidden' /><span class='inline-block'>初心者の方でも</span><span class='inline-block'>安心して始められます。</span>", q4: "<span class='inline-block'>持ち物は</span><span class='inline-block'>何が必要ですか？</span>", a4: "<span class='inline-block'>ウェア、シューズ、タオルはすべて</span><span class='inline-block'>無料でレンタル可能です。</span><br class='block md:hidden' /><span class='inline-block'>お仕事帰りでも手ぶらで</span><span class='inline-block'>お気軽にお越しいただけます。</span>", q5: "<span class='inline-block'>シャワー室は</span><span class='inline-block'>ありますか？</span>", a5: "<span class='inline-block'>はい、個室の</span><span class='inline-block'>シャワールームを</span><span class='inline-block'>完備しております。</span><br class='block md:hidden' /><span class='inline-block'>アメニティも自由に</span><span class='inline-block'>ご利用いただけます。</span>" },
+    finalCta: { headline: "この一歩で、未来の私が", headlineHighlight: "変われる。", body1: "まずは無料カウンセリングへ。", body2: "あなたにぴったりの<br class='block md:hidden' />プランをご提案します。", cta: "無料カウンセリングを予約" },
+    access: { badge: "ACCESS", headline: "アクセスマップ" },
+    footer: { logo: "Y_Gym", follow: "Follow Us", voices: "お客様の声", stores: "店舗一覧", courses: "コース", news: "お知らせ", faq: "よくあるご質問", contact: "お問い合わせ", disclaimer: "<span class='inline-block'>※本ページ内で使用している画像素材は、</span><span class='inline-block'>GoogleのAI（Nano Banana）を用いて</span><br class='block md:hidden' /><span class='inline-block'>テキストプロンプトより</span><span class='inline-block'>生成・調整したものです。</span>", copyright: "© since 2024 Y_Gym." },
+    modal: { title: "Y_Gym 無料体験・カウンセリング予約", desc: "忙しい毎日に寄り添うプライベートなひとときを。下記フォームよりご希望の内容をお送りください。", nameLabel: "お名前", namePlaceholder: "山田 華子", emailLabel: "メールアドレス", emailPlaceholder: "hanako@example.com", menuLabel: "ご希望のメニュー", counselingTitle: "無料カウンセリング", counselingDesc: "お悩みを聞き取り、無理のないプランをご提案します。", trainingTitle: "体験トレーニング", trainingDesc: "完全個室でトレーナーによる実際の指導を体験。", timeCounseling: "目安: 45分", timeTraining: "目安: 60分", btnCancel: "キャンセル", btnSubmit: "上記の内容で送信する", btnSubmitting: "送信しています...", successTitle: "ご予約リクエスト完了", successThankYou: "ありがとうございます、{name}様。", successBody: "お送りいただいた内容は無事に送信されました。24時間以内に、ご入力いただいたメールアドレス（{email}）宛てに担当トレーナーよりご連絡差し上げます。", successBtnClose: "閉じる" }
+  },
+  en: {
+    nav: { logo: "Y_Gym", concept: "Concept", features: "Features", pricing: "Pricing", faq: "FAQ", access: "Access", cta: "Book Free Session" },
+    hero: { brand: "Matsuyama Boutique Gym", headline: "Empower Your Routine,", headlineHighlight: "Evolve Yourself.", body1: "Beginner friendly. Achieve your dream shape within 2 months.", body2: "A serene, luxurious private gym designed exclusively for busy women.", cta: "Schedule Free Counseling" },
+    concept: { badge: "CONCEPT", headline: "A Sanctuary Mindfully Aligning With Your Daily Life", body1: "Y_Gym is more than a standard workout space to break a sweat.", body2: "It is a beautifully crafted sanctuary to restore both mind and body.", body3: "Train to your absolute maximum in elegant, fully enclosed private suites.", body4: "Your personal, highly dedicated professional trainer supports you entirely at your pace." },
+    reasons: { badge: "OUR THREE PILLARS", headline: "Handpicked Luxury. Come as You Are, Direct from the Office", r1Title: "1. Hand-delivered Complimentary Rentals", r1Body: "Premium workout wear, towels, and sleek shoes are fully provided. Arrive completely empty-handed anytime.", r2Title: "2. Fully Sealed Private Suites", r2Body: "Experience profound focus entirely isolated from public eyes.", r3Title: "3. Direct One-on-One True Mentorship", r3Body1: "Certified master trainers carefully match your distinct lifestyle ambitions.", r3Body2: "Begin your journey safely and elegantly, regardless of previous experience." },
+    pricing: { badge: "PRICING", headline: "Begin with a Free Session. Experience the Luxury.", planStandard: "Standard", planFreeTrial: "Free Trial", planPremium: "Premium", monthly: "Monthly Fee", perMonth: "/mo", firstTimeOnly: "First-Time Promotion", recommended: "RECOMMENDED", detail: "View Details", bookFree: "Book for Free", stdBenefit1: "4 Personal training sessions per month", stdBenefit2: "Essential nutritionist guidelines", freeBenefit1: "Bespoke holistic consultation", freeBenefit2: "Active master trainer test drive", freeBenefit3: "Full complimentary standard apparel & equipment rental", premBenefit1: "Unlimited gym access (Reservation required)", premBenefit2: "Daily comprehensive elite food monitoring", premBenefit3: "Freshly-prepared organic protein shake included" },
+    faq: { badge: "FAQ", headline: "Answering Your", headlineHighlight: "Inquiries", q1: "Is there an initial registration or joining fee?", a1: "Yes, the standard registration fee is ¥33,000 (tax incl.). However, exclusive dynamic discounts apply when deciding to join on the day of your free trial.", q2: "Can I adjust or reschedule my booked session?", a2: "Yes, modifications and cancellations are fully free if processed before 6:00 PM of the preceding day. Cancellations after this threshold may deduct 1 session coupon.", q3: "I have near-zero fitness experience. Can I successfully complete this?", a3: "Absolutely. We map every routine precisely to your exact physical metrics and comfort parameters. You will succeed comfortably.", q4: "What physical items am I required to bring?", a4: "None at all. Premium workout wear, shoes, and pristine towels are completely complimentary. Drop in direct from your lifestyle demands.", q5: "Are modern showering facilities available?", a5: "Yes, pristine, luxury private lockable shower suites are fully available, complete with organic vanity sets and essential amenities." },
+    finalCta: { headline: "This Singular Step Translates To A", headlineHighlight: "Luminous Future.", body1: "Begin with your complimentary private consultation.", body2: "Allow us to compose a tailored road map designed exclusively for your ambitions.", cta: "Schedule Free Counseling" },
+    access: { badge: "ACCESS", headline: "Access Map" },
+    footer: { logo: "Y_Gym", follow: "Follow Us", voices: "Testimonials", stores: "Locations", courses: "Programs", news: "News & Events", faq: "Frequently Asked", contact: "Contact System", disclaimer: "*The visual assets showcased within this landing page were crafted using Google AI models (Nano Banana) styled purely from responsive text prompts.", copyright: "© since 2024 Y_Gym. All Rights Reserved." },
+    modal: { title: "Y_Gym Consultation Booking", desc: "Delve into an elegant, highly customized private gym sanctuary. Simply submit your information below to reserve.", nameLabel: "Your Name", namePlaceholder: "Jane Doe", emailLabel: "Email Address", emailPlaceholder: "jane@example.com", menuLabel: "Preferred Appointment Range", counselingTitle: "Free Private Consultation", counselingDesc: "Identify key wellness hurdles and outline custom training blueprints.", trainingTitle: "Complimentary Workout", trainingDesc: "Experience premium active private coaching firsthand.", timeCounseling: "Est. 45 min", timeTraining: "Est. 60 min", btnCancel: "Cancel", btnSubmit: "Submit Booking Request", btnSubmitting: "Registering request...", successTitle: "Booking Request Received", successThankYou: "Thank you indeed, {name}.", successBody: "Your application was sent successfully. An elite wellness counselor will reach out to you within 24 hours at your address: {email}.", successBtnClose: "Close Window" }
+  },
+  zh: {
+    nav: { logo: "Y_Gym", concept: "品牌理念", features: "服务特色", pricing: "尊享价格", faq: "面授答疑", access: "地理位置", cta: "免费预约体验" },
+    hero: { brand: "Matsuyama Boutique Gym", headline: "轻松起步，优雅蜕变，", headlineHighlight: "邂逅纯真自我。", body1: "无须担心运动经验。两个月重返紧致身材。", body2: "专为现代精英女性打造的松弛、奢华私密运动空间。", cta: "立即预约免费咨询" },
+    concept: { badge: "CONCEPT", headline: "于喧嚣日常中，温润相伴的心灵归所", body1: "Y_Gym 绝非只是一座令人挥汗如雨的传统健身房。", body2: "而是一处可以深层唤醒身体活力、平复心神之优雅秘境。", body3: "在完全封闭、绝对私密的纯独立厢房中专注进行力量升华。", body4: "资深私人教练将精雕细琢契合您作息强度的优雅塑形计划。" },
+    reasons: { badge: "Y_Gym 的三大核心秘诀", headline: "尊尚配套。下班后直接到访，轻装上阵的奢华生活", r1Title: "1. 备品齐全 免费空手免备", r1Body: "为您提供高级运动服、专业跑鞋及洗护巾。无论生活如何临时而定，皆能无忧前往。", r2Title: "2. 独立私密 尊享个人空间", r2Body: "不必承受外界注目，全程在奢华包厢中无压力私享训练体验。", r3Title: "3. 贴心指引 一对一悉心指点", r3Body1: "认证星级导师专为您的一毫一厘指标潜心雕琢规划。", r3Body2: "零基础学员亦在宁谧的氛围中安心自信，蜕变不急不缓。" },
+    pricing: { badge: "PRICING", headline: "踏出蜕变第一步。即刻启动免费高定试练。", planStandard: "Standard", planFreeTrial: "Free Trial", planPremium: "Premium", monthly: "月付会员", perMonth: "/月", firstTimeOnly: "首次限定特典", recommended: "RECOMMENDED", detail: "查看详情", bookFree: "免费预订体验", stdBenefit1: "每月4次资深主教练专属贴身辅导", stdBenefit2: "基础餐食方案和精细热量指南", freeBenefit1: "深度形体与理疗咨询分析", freeBenefit2: "资深教练实地指导课体验", freeBenefit3: "尊享全套高端配饰、洗换衣物及用品免租", premBenefit1: "不限次数肆意训练（需提前锁课预约）", premBenefit2: "主教练全天候全息膳食追踪与精确热量指导", premBenefit3: "课后当场调配精选纯素燕麦蛋白特饮一份" },
+    faq: { badge: "FAQ", headline: "倾听与解答", headlineHighlight: "您的疑虑", q1: "是否有入会金或需要支付建档费？", a1: "是的，常规入会金及建档管理费为33,000日元（含税）。通常我们在您完成首次免费私教课当天决定入会时，会赠予超规格减免特典。", q2: "预约排课后如何灵活調整或者取消？", a2: "您仅需在前一天18:00前温馨微联客服即可，无须任何扣费。在此之后变动可能需要扣减相应的一课时课券，望请理解。", q3: "平日生活疏于锻炼甚至零经验，我能坚持下来吗？", a3: "当然可以。我们会细致采集并分析您的初始骨骼架构、经血疲惫度等。全过程没有任何逼迫式的强加运动，您只管安心舒畅前行。", q4: "我需要自带毛巾或换洗衣物吗？", a4: "无需自备任何繁琐行李。高支棉运动服、进口除臭跑鞋及轻软毛巾一应俱全。下班后直奔本店，享受即刻蜕变的惬意。", q5: "店内提供淋浴洗浴及备洗奢品吗？", a5: "是的，我们专门搭建了独立的单人带锁浴室闺房，并深度选用小众天然沐浴液及奢牌吹风护理等奢雅备品。" },
+    finalCta: { headline: "此番一步，许未来一隅", headlineHighlight: "更优雅的自己。", body1: "率先开启您的免费高定私人形体咨询。", body2: "资深健康教练将结合您一毫一厘的诉求，规划专属您的美丽里程图。", cta: "预约免费私人咨询" },
+    access: { badge: "ACCESS", headline: "アクセスマップ (位置图)" },
+    footer: { logo: "Y_Gym", follow: "Follow Us", voices: "贵宾评价", stores: "极奢分部", courses: "全系项目", news: "特别资讯", faq: "面授答疑", contact: "留言反馈", disclaimer: "*本网页宣发海报均由 Google AI 模型 (Nano Banana) 结合唯美创意词藻优雅渲染生成。", copyright: "© since 2024 Y_Gym. 版权所有" },
+    modal: { title: "Y_Gym 奢享服务预约系统", desc: "尊享安谧奢隐的私教形体美学空间。请您认真填写下述高定问询，以便主教练提前为您作规划。", nameLabel: "尊姓大名", namePlaceholder: "张丽娜", emailLabel: "电子邮箱", emailPlaceholder: "lina@example.com", menuLabel: "定制体验类别", counselingTitle: "免费私人形体分析", counselingDesc: "破译局部肥胖成因并提出专属定制解决方案。", trainingTitle: "主教练指导体验课", trainingDesc: "深入包厢，体悟国际尖端器械实地美学指导。", timeCounseling: "估时 45 分钟", timeTraining: "估时 60 分钟", btnCancel: "取消", btnSubmit: "递交尊贵申请", btnSubmitting: "正为您接入锁定...", successTitle: "贵宾预约申请已收到", successThankYou: "万分荣幸有您的垂青，{name} 女士。", successBody: "您的体验档期由于名额紧张已启动绿色专线锁定，主教练会于24小时内，亲自拨打或邮件（{email}）连线，敬请静瞩佳音。", successBtnClose: "关闭窗口" }
+  },
+  ko: {
+    nav: { logo: "Y_Gym", concept: "브랜드 철학", features: "특별한 혜택", pricing: "멤버십 요금", faq: "Q&A 안내", access: "오시는 길", cta: "무료 체험 예약" },
+    hero: { brand: "Matsuyama Boutique Gym", headline: "무작정 애쓰지 않고,", headlineHighlight: "진정한 나의 아름다움으로.", body1: "운동 경험이 없어도 괜찮습니다. 2달 만에 그 시절의 바디 라인으로.", body2: "바쁜 현대 여성들을 위해 마련된 영혼의 치유, 럭셔리 프라이빗 체육 공간.", cta: "무료 퍼스널 카운셀링 예약" },
+    concept: { badge: "CONCEPT", headline: "바쁜 매일의 여정 속에, 다정히 스며드는 영혼의 안식처", body1: "Y_Gym은 단지 땀만 흘리고 떠나는 기계적인 헬스장이 아닙니다.", body2: "가쁜 숨을 고르고, 몸과 마음을 정갈하게 회복하는 프라이빗 안식처입니다.", body3: "세심하게 격리된 완벽한 개실에서 주변 간섭 없이 오롯이 나에게 집중합니다.", body4: "당신의 고유한 흐름에 완벽하게 맞추어 정성을 다해 서포트하겠습니다." },
+    reasons: { badge: "Y_Gym의 세 가지 타협 없는 약속", headline: "품격 있는 배려. 빈손으로 가볍게 퇴근 후 즐기는 럭셔리 루틴", r1Title: "1. 완벽한 프리미엄 렌탈 프리", r1Body: "고밀도 기능성 의류, 최신 아웃솔 러닝화, 보송보송한 타월까지 전원 무상 대여합니다.", r2Title: "2. 타인의 시선을 완벽히 차단한 독립 스위트", r2Body: "오직 당신만을 위해 준비된 맞춤형 트레이닝 룸에서 눈치 볼 필요 없이 마음껏 운동하세요.", r3Title: "3. 공인 마스터 트레이너의 다정한 1:1 전담 피드백", r3Body1: "전문 영양 자격이 깃든 마스터가 일일 목표와 통증 추이를 섬세히 분석해 나갑니다.", r3Body2: "기초 동작부터 친절히 안내하오니, 마음을 놓고 자연스럽게 편승하세요." },
+    pricing: { badge: "PRICING", headline: "가벼운 마음으로 첫 무료 체험을 경험해 보세요.", planStandard: "Standard", planFreeTrial: "Free Trial", planPremium: "Premium", monthly: "월간 전용", perMonth: "/월", firstTimeOnly: "첫 방문 한정 혜택", recommended: "RECOMMENDED", detail: "자세히 보기", bookFree: "무료 체험 예약하기", stdBenefit1: "월 4회 마스터 전담 집중 트레이닝 세션", stdBenefit2: "식품 일지 기반 데일리 뉴트리션 어드바이스", freeBenefit1: "체형 비대칭 및 통증 케어 정밀 상담", freeBenefit2: "마스터 트레이너 맞춤 운동 처방 체험", freeBenefit3: "프리미엄 슈즈, 운동복, 어메니티 일체 전면 무상 대여", premBenefit1: "예약 기반 제한 없는 무제한 퍼스널 액세스", premBenefit2: "카카오톡 기반 1일 밀착 전담 삼시세끼 식단 가이드", premBenefit3: "유기농 귀리 프로틴 블렌딩 특음료 상시 무상 증정" },
+    faq: { badge: "FAQ", headline: "당신의 궁금증을", headlineHighlight: "해결해 드립니다", q1: "가입비나 등록 행정비가 따로 추가되나요?", a1: "네, 정상 가입비는 33,000엔(세금 포함)입니다. 그러나 무료 카운셀링 및 체험 당일 가입을 조율하시는 회원님께는 대폭 감면 스페셜 특혜를 드리고 있습니다.", q2: "예약한 일정을 변경하거나 조정할 수 있나요?", a2: "네, 세션 일주일 전 혹은 전날 오후 18시 전까지 당사 온라인 및 연락망으로 수정해 주시면 수수료가 전혀 없습니다. 그 이후에 하시는 경우 회차가 차감될 수 있습니다.", q3: "평소 운동을 거의 안 해본 사람도 시작할 수 있을까요?", a3: "전혀 염려치 마십시오. 당사는 과격하거나 억지 호객 운동을 배제합니다. 회원님의 지친 관절 가동 범위와 체력에 맞추어, 호흡마저도 아름답게 맞추어 갑니다.", q4: "체육관 갈 때 개별로 준비할 짐이 많을까요?", a4: "말 그대로 가벼운 맨몸으로 오시면 됩니다. 고급 액티브 의류와 풋케어 러닝화, 상쾌한 타월 모두 마스터 트레이너가 준비해 놓습니다.", q5: "샤워실 및 케어실 독립 어메니티는 어떤가요?", a5: "개인 보호가 완비된 프라이빗 도어락 샤워실을 완비했으며, 최고급 유기농 바디 세트와 이온 스팀 드라이가 놓여 상쾌하게 마감하실 수 있습니다." },
+    finalCta: { headline: "이 작은 걸음이, 미래 내 삶의", headlineHighlight: "아름다운 궤도가 된다.", body1: "먼저 마련된 무료 정밀 카운셀링을 만나보세요.", body2: "체형 관리 전문가가 오직 당신만을 위한 최고의 건강 여정 지도를 선물합니다.", cta: "무료 정밀 카운셀링 예약" },
+    access: { badge: "ACCESS", headline: "Access Map" },
+    footer: { logo: "Y_Gym", follow: "Follow Us", voices: "브이아이피 소리", stores: "매장 안내", courses: "클래스 프로그램", news: "정식 안내공지", faq: "Q&A 안내", contact: "피드백 문의하기", disclaimer: "*본 웹페이지에 게시된 영롱한 시각적 자료들은 Google AI 기술(Nano Banana)을 매개 삼아 텍스트 조율로 정제된 아트워크입니다.", copyright: "© since 2024 Y_Gym. All Rights Reserved." },
+    modal: { title: "Y_Gym 멤버십 매칭 시스템", desc: "당신만을 위해 정성 들여 소독하고 대기하고 있는 체육 도원입니다. 전담 일정이 예약 완료되도록 기록해 주세요.", nameLabel: "회원명 성함", namePlaceholder: "김영희", emailLabel: "이메일 주소", emailPlaceholder: "younghee@example.com", menuLabel: "원하시는 희망 코스", counselingTitle: "정밀 프라이빗 체형 상담", counselingDesc: "통증 부위 진단 og 맞춤 운동 패키지 맞춤 수립.", trainingTitle: "무상 마스터 체험 라이딩", trainingDesc: "방음 스위트 룸에서 이뤄지는 실제 프리미엄 하이엔드 트레이닝.", timeCounseling: "약 45분 소요", timeTraining: "약 60 소요", btnCancel: "취소", btnSubmit: "매칭 신청서 전송", btnSubmitting: "트레이너 배정 중...", successTitle: "매칭 리퀘스트 공식 접수 완료", successThankYou: "귀한 믿음을 보내주셔서 감사드립니다, {name} 회원님.", successBody: "안심하세요. 배정 완료된 전문 트레이너가 수령한 진술 사항을 기반으로 하여 24시간 이내에 입력하신 연락망({email})을 통하여 향긋한 음성 혹은 문자로 마중 나가겠습니다.", successBtnClose: "매칭 팝업 닫기" }
+  },
+  fr: {
+    nav: { logo: "Y_Gym", concept: "Concept", features: "Prestations", pricing: "Abonnements", faq: "FAQ", access: "Accès", cta: "Réserver un Essai" },
+    hero: { brand: "Matsuyama Boutique Gym", headline: "Cultivez votre bien-être,", headlineHighlight: "Éveillez votre corps.", body1: "Idéal pour débutantes. Retrouvez votre ligne idéale en deux mois seulement.", body2: "Un sanctuaire de fitness privé et luxueux, conçu exclusivement pour la femme moderne.", cta: "Réserver un Bilan Gratuit" },
+    concept: { badge: "CONCEPT", headline: "Un havre de paix qui s'harmonise avec votre vie", body1: "Y_Gym est bien plus qu'une simple salle de sport ordinaire pour transpirer.", body2: "C'est un espace élégant conçu pour ressourcer profondément le corps et l'esprit.", body3: "Entraînez-vous en toute sérénité dans des suites privées isolées.", body4: "Votre coach personnel de prestige vous guide et progresse entièrement à votre rythme." },
+    reasons: { badge: "NOS TROIS PILIERS", headline: "Prestations haut de gamme. Venez l'esprit léger après le travail", r1Title: "1. Service de prêt exclusif sans contrainte", r1Body: "Tenues haut de gamme, serviettes et chaussures sont gracieusement fournies sur place.", r2Title: "2. Suites privatives d'un calme absolu", r2Body: "Profitez d'une atmosphère feutrée et sereine sans l'inconfort des regards extérieurs.", r3Title: "3. Accompagnement sur mesure de haut niveau", r3Body1: "Votre entraîneur attitré façonne une routine adaptée à vos objectifs spécifiques.", r3Body2: "Progressez en toute sécurité, quel que soit votre historique sportif." },
+    pricing: { badge: "ABONNEMENTS", headline: "Bénéficiez d'une séance d'essai gratuite", planStandard: "Standard", planFreeTrial: "Free Trial", planPremium: "Premium", monthly: "Frais Mensuel", perMonth: "/mois", firstTimeOnly: "Offre d'Introduction", recommended: "RECOMMANDÉ", detail: "En savoir plus", bookFree: "S'inscrire Gratuitement", stdBenefit1: "4 séances de coaching personnel par mois", stdBenefit2: "Conseils nutritionnels de base personnalisés", freeBenefit1: "Analyse posturale et corporelle avec votre coach", freeBenefit2: "Séance d'essai de fitness personnalisée", freeBenefit3: "Prêt complet et gracieux des équipements nécessaires", premBenefit1: "Accès illimité aux installations privées (sur réservation)", premBenefit2: "Suivi nutritionnel quotidien détaillé", premBenefit3: "Boisson protéinée bio incluse après chaque séance" },
+    faq: { badge: "FAQ", headline: "Nous répondons à vos", headlineHighlight: "questions", q1: "Y a-t-il des frais d'inscription ou d'adhésion ?", a1: "Oui, les frais d'adhésion standard sont de 33 000 JPY (TTC). Cependant, vous bénéficiez de réductions exclusives si vous vous inscririvez le jour de votre essai.", q2: "Puis-je modifier ou annuler une séance réservée ?", a2: "Tout à fait, les modifications sont gracieuses si elles sont signalées avant 18h la veille. Au-delà, la séance est susceptible d'être facturée.", q3: "Je n'ai aucune expérience sportive. Puis-je y arriver ?", a3: "Absolument. Nous concevons chaque exercice selon vos spécificités articulaires et cardiaques. Vous évoluerez en toute sécurité.", q4: "Que dois-je emporter dans mon sac de sport ?", a4: "Strictement rien. Nous mettons gracieusement à votre disposition tenues, chaussures fraîches et serviettes moelleuses.", q5: "Disposez-vous de cabines de douche premium ?", a5: "Oui, nous possédons de magnifiques douches privées équipées de soins botaniques haut de gamme pour votre plus grand confort." },
+    finalCta: { headline: "Ce premier pas transforme votre", headlineHighlight: "quotidien.", body1: "Réservez dès maintenant votre premier entretien diagnostic gratuit.", body2: "Ensemble, dessinons l'itinéraire idéal vers votre bien-être physique et mental.", cta: "Planifier mon diagnostic gratuit" },
+    access: { badge: "ACCÈS", headline: "Carte d'accès" },
+    footer: { logo: "Y_Gym", follow: "Suivez-nous", voices: "Avis Clients", stores: "Studio Locaux", courses: "Programmes", news: "Actualités", faq: "Questions fréquentes", contact: "Espace Client", disclaimer: "*Les visuels présents sur cette page ont été générés à l'aide de l'intelligence artificielle (Nano Banana) via des invites narratives.", copyright: "© depuis 2024 Y_Gym. Tous droits réservés." },
+    modal: { title: "Réservation Service Y_Gym", desc: "Plongez au cœur d'un cocon sportif raffiné et exclusif. Veuillez soumettre les informations requises ci-dessous pour réserver votre place.", nameLabel: "Votre nom complet", namePlaceholder: "Léa Dubois", emailLabel: "Adresse e-mail", emailPlaceholder: "lea@example.com", menuLabel: "Prestation souhaitée", counselingTitle: "Diagnostic Forme & Postural", counselingDesc: "Faites le point sur vos besoins et dessinez un programme sur mesure.", trainingTitle: "Séance découverte active", trainingDesc: "Faites l'expérience du coaching de prestige en suite privée.", timeCounseling: "Durée estimée : 45 min", timeTraining: "Durée estimée : 60 min", btnCancel: "Annuler", btnSubmit: "Soumettre ma demande", btnSubmitting: "Enregistrement en cours...", successTitle: "Demande prise en compte", successThankYou: "Tous nos remerciements, {name}.", successBody: "Votre demande de réservation a été enregistrée avec succès. Un conseiller bien-être prendra directement contact avec vous sous 24h à l'adresse suivante : {email}.", successBtnClose: "Fermer la fenêtre" }
+  },
+  es: {
+    nav: { logo: "Y_Gym", concept: "Concepto", features: "Servicios", pricing: "Membresías", faq: "Preguntas", access: "Acceso", cta: "Reservar Prueba Gratis" },
+    hero: { brand: "Matsuyama Boutique Gym", headline: "Transforma tu rutina,", headlineHighlight: "Descubre tu bienestar.", body1: "Ideal para principiantes. Logra tu silueta ideal en solo dos meses.", body2: "Un santuario de fitness privado y exclusivo, diseñado para la mujer actual.", cta: "Reservar Diagnóstico Gratis" },
+    concept: { badge: "CONCEPTO", headline: "Un refugio de bienestar que se adapta a tu ritmo diario", body1: "Y_Gym es mucho más que un gimnasio común con máquinas ruidosas.", body2: "Es un santuario de relajación creado para renovar la armonía corporal.", body3: "Entrena con total intimidad en suites totalmente privadas e independientes.", body4: "Tu entrenador personal te guiará respetando de manera absoluta tu ritmo y comodidad." },
+    reasons: { badge: "Y_Gym の3つの強み", headline: "Detalles que miman. Ven directamente al salir del trabajo", r1Title: "1. Todo incluido sin costo adicional", r1Body: "Ropa deportiva premium, zapatillas y toallas limpias están totalmente a tu disposición.", r2Title: "2. Suites privadas libres de distracciones", r2Body: "Disfruta de tu entrenamiento a puerta cerrada, sin la presencia de extraños.", r3Title: "3. Asesoramiento personalizado constante", r3Body1: "Expertos titulados adaptan meticulosamente el ejercicio a tu fisionomía.", r3Body2: "Comienza sin temores, sin importar tu experiencia física previa." },
+    pricing: { badge: "MEMBRESÍAS", headline: "Disfruta de tu primera sesión de cortesía", planStandard: "Standard", planFreeTrial: "Free Trial", planPremium: "Premium", monthly: "Mensualidad", perMonth: "/mes", firstTimeOnly: "Promoción Inicial", recommended: "RECOMENDED", detail: "Ver detalles", bookFree: "Inscribirse Gratis", stdBenefit1: "4 sesiones mensuales de entrenamiento privado", stdBenefit2: "Consejos básicos de tu asesor de nutrición", freeBenefit1: "Análisis físico y diagnóstico inicial con tu coach", freeBenefit2: "Sesión experimental de fitness adaptado", freeBenefit3: "Préstamo totalmente gratuito del material deportivo", premBenefit1: "Acceso ilimitado a las instalaciones privadas (con reserva)", premBenefit2: "Seguimiento nutricional diario pormenorizado", premBenefit3: "Batido de proteína orgánica incluido después de cada sesión" },
+    faq: { badge: "FAQ", headline: "Resolvemos tus", headlineHighlight: "dudas", q1: "¿Existe alguna cuota de inscripción inicial?", a1: "Sí, el costo de inscripción estándar es de ¥33,000 (impuestos incl.). Sin embargo, ofrecemos descuentos especiales si decides sumarte el día de tu prueba.", q2: "¿Puedo modificar la hora de mis reservas?", a2: "Por supuesto. Las cancelaciones son libres de cargo si se informan antes de las 18:00 del día anterior. De lo contrario, se podría descontar la sesión.", q3: "No tengo experiencia previa en deportes. ¿Es apto para mí?", a3: "Totalmente. Diseñamos rutinas acordes a tu rango de movilidad y resistencia actual. Tu seguridad es nuestra absoluta prioridad.", q4: "¿Qué debo traer en mi bolso de entrenamiento?", a4: "No necesitas traer nada. Facilitamos ropa técnica higienizada, calzado cómodo y de algodón sin costo alguno.", q5: "¿Disponen de zonas de ducha individuales?", a5: "Sí, contamos con amplias duchas privadas surtidas con cosméticos de extractos botánicos naturales para refrescarte después de entrenar." },
+    finalCta: { headline: "Un primer paso hacia un mañana", headlineHighlight: "más saludable.", body1: "Reserva hoy mismo tu diagnóstico de condición física gratis.", body2: "Planteemos juntas las metas ideales para que disfrutes de un cambio armónico.", cta: "Solicitar diagnóstico gratis" },
+    access: { badge: "ACCESO", headline: "Mapa de localización" },
+    footer: { logo: "Y_Gym", follow: "Síguenos", voices: "Opiniones", stores: "Salas Locales", courses: "Nuestros Programmes", news: "Novedades", faq: "Dudas habituales", contact: "Atención al Cliente", disclaimer: "*Las imágenes de este sitio web han sido creadas de manera exclusiva mediante inteligencia artificial (Nano Banana) a través de peticiones descriptivas.", copyright: "© desde 2024 Y_Gym. Todos los derechos reservados." },
+    modal: { title: "Reserva de Sesión Y_Gym", desc: "Sumérgete en una experiencia de fitness refinada y totalmente privada. Por favor, ingresa los datos correspondientes abajo para proceder.", nameLabel: "Nombre y apellido", namePlaceholder: "Sofía Martínez", emailLabel: "Correo electrónico", emailPlaceholder: "sofia@example.com", menuLabel: "Servicio que solicita", counselingTitle: "Estudio Postural y Diagnóstico", counselingDesc: "Determina tus objetivos corporales con asesoramiento experto.", trainingTitle: "Sesión práctica en suite", trainingDesc: "Experimenta la atención premium de nuestros entrenadores personales.", timeCounseling: "Duración est.: 45 min", timeTraining: "Duración est.: 60 min", btnCancel: "Cancelar", btnSubmit: "Enviar mi solicitud", btnSubmitting: "Procesando información...", successTitle: "Solicitud registrada", successThankYou: "Nuestro agradecimiento sincero, {name}.", successBody: "Hemos agendado tu solicitud correctamente. Uno de nuestros coaches especializados se pondrá en contacto contigo en las próximas 24 horas al correo: {email}.", successBtnClose: "Cerrar ventana" }
+  },
+  th: {
+    nav: { logo: "Y_Gym", concept: "คอนเซปต์", features: "จุดเด่นบริการ", pricing: "แพ็กเกจ", faq: "คำถามที่พบบ่อย", access: "การเดินทาง", cta: "จองทดลองเรียนฟรี" },
+    hero: { brand: "Matsuyama Boutique Gym", headline: "เปลี่ยนหุ่นสวยอย่างเป็นธรรมชาติ", headlineHighlight: "สู่ตัวตนที่ดีที่สุดของคุณ", body1: "ไม่มีประสบการณ์ออกกำลังกายก็เริ่มได้ หุ่นเฟิร์มกระชับเห็นผลใน 2 เดือน", body2: "สตูดิโอฟิตเนสส่วนตัวสุดหรูขวัญใจสาวๆ ผู้มีเวลาน้อย", cta: "จองปรึกษาฟรีวันนี้" },
+    concept: { badge: "CONCEPT", headline: "ฟิตเนสส่วนตัวที่ผสานความสุขเข้ากับไลฟ์สไตล์คุณอย่างแท้จริง", body1: "Y_Gym ไม่ใช่แค่ยิมออกกำลังกายทั่วไปที่สร้างเพื่อเรียกเหงื่อและเผาผลาญเท่านั้น", body2: "แต่คือสถานที่พักผ่อนสุดผ่อนคลายที่รังสรรค์มาเพื่อบำบัดทั้งร่างกายและจิตใจ", body3: "ออกกำลังกายได้อย่างเป็นอิสระและมีความเป็นส่วนตัวสูงสุดในห้องเทรนนิ่งส่วนตัวแยกเฉพาะ", body4: "เทรนเนอร์มือโปรพร้อมดูแลปรับเปลี่ยนทุกขั้นตอนอย่างละเอียดตามเป้าหมายและความเร็วของคุณ" },
+    reasons: { badge: "จุดเด่นสำคัญ 3 ประการของ Y_Gym", headline: "บริการความสะดวกสบายเต็มร้อย เดินทางมามือเปล่าหลังเลิกงานได้ทันที", r1Title: "1. ฟรีบริการยืมชุดและลอคเกอร์", r1Body: "เราจัดเตรียมชุดออกกำลังกาย เกรดพรีเมียม รองเท้ากีฬาสวมสบาย และผ้าเช็ดตัวไว้ให้ฟรีเพื่อให้คุณเดินทางมาฟิตได้อย่างราบรื่น", r2Title: "2. ห้องเทรนนิ่งส่วนตัว ปลอดภัย ไร้กังวล", r2Body: "สัมผัสความอบอุ่นและมีสมาธิด้วยการออกกำลังกายในห้องปิดส่วนตัว ห่างไกลสายตาและเสียงรบกวนภายนอก", r3Title: "3. เทรนเนอร์ส่วนตัวดูแลและติดตามผลอย่างละเอียดแบบ 1 ต่อ 1", r3Body1: "โค้ชส่วนตัวคอยปรับท่าทางเพื่อให้ตอบโจทย์ความก้าวหน้าและการพักผ่อนของร่างกาย", r3Body2: "หมดกังวลแม้ไม่มีพื้นฐาน โค้ชคอยสอนตั้งแต่ก้าวแรกด้วยความเป็นกันเอง" },
+    pricing: { badge: "PRICING", headline: "เริ่มต้นจองทดลองเล่นวันนี้ ฟรีไม่มีค่าใช้จ่าย", planStandard: "Standard", planFreeTrial: "Free Trial", planPremium: "Premium", monthly: "ค่าบริการรายเดือน", perMonth: "/เดือน", firstTimeOnly: "โปรโมชันเฉพาะครั้งแรก", recommended: "RECOMMENDED", detail: "รายละเอียดเพิ่มเติม", bookFree: "จองฟรีที่นี่", stdBenefit1: "เทรนนิ่งส่วนตัวโดยโค้ชผู้เชี่ยวชาญ 4 ครั้งต่อเดือน", stdBenefit2: "แผนการดูแลและแนวทางการควบคุมสารอาหารพื้นฐาน", freeBenefit1: "การตรวจวัดวิเคราะห์โครงสร้างร่างกายและเป้าหมาย", freeBenefit2: "ทดลองเทรนนิ่งส่วนตัวจริงในห้องปิดเฉพาะ", freeBenefit3: "ฟรีบริการยืมเสื้อผ้า รองเท้า และผ้าขนหนูเกรดพรีเมียม", premBenefit1: "เข้าออกยิมส่วนตัวได้ไม่จำกัด (ต้องสำรองสิทธิ์ล่วงหน้า)", premBenefit2: "แผนการรายงานและติดตามเมนูโภชนาการแบบรายวันอย่างละเอียด", premBenefit3: "ฟรีเครื่องดื่มโปรตีนออร์แกนิกสูตรเข้มข้นหลังจบคลาสทุกครั้ง" },
+    faq: { badge: "FAQ", headline: "ยินดีตอบทุกคำถาม", headlineHighlight: "เพื่อคุณ", q1: "มีค่าธรรมเนียมแรกเข้าหรือแรกลงทะเบียนหรือไม่?", a1: "มีค่ะ ค่าธรรมเนียมแรกเข้าปกติของสตูดิโออยู่ที่ 33,000 เยน (รวมภาษี) อย่างไรก็ตาม เรามีส่วนลดและโปรโมชันพิเศษลดกระหน่ำทันทีหากสมัครในวันที่จองทดลองเล่นครั้งแรกค่ะ", q2: "หากต้องการยกเลิกหรือเลื่อนนัดหมายต้องทำอย่างไรบ้าง?", a2: "สมาชิกสามารถเลื่อนหรือยกเลิกได้ฟรีโดยไม่มีค่าปรับ เพียงแจ้งผู้ดูแลล่วงหน้าก่อน 18:00 น. ของวันก่อนนัดหมาย หากเกินเวลาดังกล่าวเราอาจจำเป็นต้องหักสิทธิ์คลาสเรียน 1 ครั้งค่ะ", q3: "ไม่เคยออกกำลังกายมาก่อนเลยและกลัวเหนื่อยมาก จะสามารถเล่นได้ไหม?", a3: "ไม่ต้องกังวลเลยค่ะ เราออกแบบกิจกรรมและปรับความหนักให้เข้ากับสภาพกล้ามเนื้อและอัตราการเต้นหัวใจจริงของคุณอย่างอ่อนโยน เพื่อความสนุก ปลอดภัย ไม่มีการหักโหมแน่นอนค่ะ", q4: "จำเป็นต้องแพกกระเป๋าเตรียมอุปกรณ์มาเองเยอะไหม?", a4: "คุณสามารถเดินทางมาตัวเปล่าได้เลยค่ะ สตูดิโอมีชุดผ้าฝ้ายสวมสบาย รองเท้ากีฬา และผ้าขนหนูสะอาดเตรียมรอต้อนรับคุณอยู่เสมอค่ะ", q5: "ในสตูดิโอมีห้องอาบน้ำและห้องแต่งตัวส่วนตัวบริการไหม?", a5: "มีค่ะ สตูดิโอจัดเตรียมห้องอาบน้ำเดี่ยวปิดลอคแน่นหนา พร้อมผลิตภัณฑ์ทำความสะอาดเส้นผมและผิวสูตรออร์แกนิก รวมถึงไดร์เป่าผมไว้บริการครบครัน" },
+    finalCta: { headline: "ก้าวแรกนี้เพื่อชีวิตใหม่", headlineHighlight: "ที่สมดุลและงดงามยิ่งขึ้น", body1: "ลงทะเบียนปรึกษารายบุคคลฟรีวันนี้ เพื่อให้เราช่วยวิเคราะห์สุขภาพและหุ่นสวยของคุณ", body2: "โค้ชส่วนตัวพร้อมร่วมกำหนดทิศทางเพื่อผลลัพธ์ที่ดีที่สุดสำหรับความต้องการเฉพาะของคุณ", cta: "จองปรึกษาฟรีบุคคลวันนี้" },
+    access: { badge: "ACCESS", headline: "Access Map" },
+    footer: { logo: "Y_Gym", follow: "Follow Us", voices: "รีวิวจากลูกค้า", stores: "สาขาของเรา", courses: "คอร์สเรียนทั้งหมด", news: "ข่าวสารและกิจกรรม", faq: "คำถามพบบ่อย", contact: "ติดต่อเรา", disclaimer: "*ภาพและสื่อทั้งหมดในเว็บไซต์นี้สร้างสรรค์โดยปัญญาประดิษฐ์ระดับสูง Google AI (Nano Banana) จากข้อความจินตนาการเพื่อความสวยงามทางเทคนิคและการประชาสัมพันธ์เท่านั้น", copyright: "© ตั้งแต่ปี 2024 Y_Gym. สงวนลิขสิทธิ์ทั้งหมด" },
+    modal: { title: "ระบบสำรองสิทธิ์ Y_Gym", desc: "สัมผัสความอบอุ่นและเป็นส่วนตัวในยิมพรีเมียมเฉพาะคุณอย่างแท้จริง กรุณากรอกรายละเอียดเพื่อส่งขอนัดหมายล่วงหน้า", nameLabel: "ชื่อ - นามสกุล ของคุณ", namePlaceholder: "สมศรี มีสุข", emailLabel: "ที่อยู่อีเมลของคุณ", emailPlaceholder: "somsri@example.com", menuLabel: "บริการที่คุณต้องการเลือก", counselingTitle: "ตรวจวัดโครงสร้างและปรึกษาฟรี", counselingDesc: "หาสาเหตุอาการตึงและตรวจวัดปริมาณไขมันสะสมเพื่อแนะนำแนวทางแก้ไขตรงจุด", trainingTitle: "คลาสทดลองเล่นส่วนตัวจริง", trainingDesc: "ทดลองออกกำลังกายจริงในระบบห้องแยกเฉพาะพร้อมการดูแลของเทรนเนอร์", timeCounseling: "ใช้เวลาประมาณ 45 นาที", timeTraining: "ใช้เวลาประมาณ 60 นาที", btnCancel: "ยกเลิก", btnSubmit: "ส่งคำขอสำรองสิทธิ์", btnSubmitting: "กำลังจับคู่โค้ชให้คุณ...", successTitle: "ส่งคำขอเรียบร้อยแล้ว", successThankYou: "ขอบคุณอย่างยิ่งสำหรับความไว้วางใจ คุณ {name}", successBody: "ระบบได้รับข้อมูลของคุณแล้ว เทรนเนอร์ส่วนตัวที่ตรงกับเป้าหมายของคุณจะติดต่อกลับอย่างเร็วที่สุดเพื่อยืนยันเวลาผ่านทางอีเมล ({email}) ภายใน 24 ชม. นี้ค่ะ", successBtnClose: "ปิดหน้าต่าง" }
+  },
+  vi: {
+    nav: { logo: "Y_Gym", concept: "Ý Tưởng", features: "Đặc Điểm", pricing: "Bảng Giá", faq: "Hỏi Đáp", access: "Bản Đồ", cta: "Đặt Lịch Trải Nghiệm" },
+    hero: { brand: "Matsuyama Boutique Gym", headline: "Thay đổi nhẹ nhàng,", headlineHighlight: "Yêu chiều bản thân.", body1: "Không cần kinh nghiệm thể thao. Sở hữu vóc dáng thon gọn chỉ sau 2 tháng.", body2: "Không gian phòng gym cá nhân sang trọng, thư thái dành riêng cho phái đẹp bận rộn.", cta: "Đặt Bác Sĩ Tư Vấn Miễn Phí" },
+    concept: { badge: "CONCEPT", headline: "Nơi thư giãn tuyệt vời đồng hành cùng cuộc sống bận rộn", body1: "Y_Gym không đơn thuần là một phòng tập thể thao thông thường để đổ mồ hôi.", body2: "Đó là một không gian tinh tế để phục hồi toàn diện cả thể chất lẫn tinh thần.", body3: "Tập luyện tập trung và tuyệt đối yên tĩnh trong các phòng suite tách biệt hoàn toàn.", body4: "Huấn luyện viên cá nhân chuyên nghiệp luôn hướng dẫn bạn theo đúng nhịp độ thoải mái nhất." },
+    reasons: { badge: "BA TRỤ CỘT CỦA Y_GYM", headline: "Chú trọng sự tiện nghi. Đến ngay sau giờ làm không vướng bận", r1Title: "1. Miễn phí mượn đồ tập chuẩn cao cấp", r1Body: "Quần áo tập chất lượng cao, giày vừa vặn và khăn sạch được cung cấp miễn phí tại chỗ.", r2Title: "2. Không gian tập riêng tư không ồn ào", r2Body: "Tập trung hoàn toàn trong phòng suite độc lập, không lo ngại ánh nhìn soi mói.", r3Title: "3. Đồng hành kèm sát 1-1 cực kỳ chu đáo", r3Body1: "Huấn luyện viên điều chỉnh bài tập sát sao dựa trên thể trạng và các vấn đề về khớp xương.", r3Body2: "Yên tâm bắt đầu dù chưa có kinh nghiệm nhờ sự hướng dẫn từ những bước đầu tiên." },
+    pricing: { badge: "PRICING", headline: "Đặt buổi tập thử miễn phí ngay hôm nay", planStandard: "Standard", planFreeTrial: "Free Trial", planPremium: "Premium", monthly: "Phí Hàng Tháng", perMonth: "/tháng", firstTimeOnly: "Ưu Đãi Lần Đầu", recommended: "RECOMENDED", detail: "Xem chi tiết", bookFree: "Đăng Ký Miễn Phí", stdBenefit1: "4 buổi tập cá nhân 1 kèm 1 mỗi tháng", stdBenefit2: "Hướng dẫn thực đơn ăn uống cơ bản khoa học", freeBenefit1: "Đo lường cơ thể và nghe tư vấn sức khỏe từ chuyên gia", freeBenefit2: "Tập thử thực tế cùng huấn luyện viên trong phòng suite", freeBenefit3: "Miễn phí toàn bộ trang phục, giày và dụng cụ đi kèm", premBenefit1: "Không giới hạn số buổi tập (cần đặt phòng trước)", premBenefit2: "Theo dõi thực đơn dinh dưỡng chi tiết hàng ngày", premBenefit3: "Sữa whey protein organic chất lượng cao miễn phí sau mỗi buổi" },
+    faq: { badge: "FAQ", headline: "Giải đáp thắc mắc", headlineHighlight: "của bạn", q1: "Có mất phí đăng ký thành viên ban đầu không?", a1: "Có ạ, phí đăng ký thông thường là 33.000 JPY (gồm thuế). Tuy nhiên, chúng tôi có ưu đãi giảm mạnh nếu quý khách quyết định đăng ký ngay trong ngày trải nghiệm đầu tiên.", q2: "Có thể thay đổi thời gian lịch hẹn đã đặt không?", a2: "Hoàn toàn được ạ. Bạn có thể thay đổi hoặc hủy hẹn miễn phí nếu báo trước 18h ngày hôm trước. Sau thời gian đó, buổi hẹn có thể sẽ bị tính phí.", q3: "Tôi chưa từng tập thể thao bao giờ liệu có phù hợp không?", a3: "Bạn hoàn toàn yên tâm. HLV của chúng tôi sẽ điều chỉnh bài tập phù hợp với thể trạng thực tế, không hề chịu áp lực quá tải hay kiệt sức.", q4: "Tôi cần chuẩn bị những hành lý cá nhân gì trước khi đến tập?", a4: "Bạn cá nhân hoàn toàn có thể đến tay không ạ. Ở đây có sẵn đồng phục sạch sẽ, giày thể thao êm ái cùng khăn tắm bông mềm chờ đón.", q5: "Cơ sở vật chất của phòng tắm cá nhân ra sao?", a5: "Phòng tắm đơn khép kín bảo vệ riêng tư, được chuẩn bị đầy đủ sữa tắm dầu gội chiết xuất organic tự nhiên lành tính cùng máy sấy hơi nước cao cấp." },
+    finalCta: { headline: "Bước chân đầu tiên đổi thay cuộc sống", headlineHighlight: "yên bình hơn.", body1: "Hãy đăng ký buổi tư vấn hình thể chuyên sâu miễn phí ngay hôm nay.", body2: "Huấn luyện viên sẽ phác thảo bản đồ lộ trình tối ưu đáp ứng trọn vẹn mong muốn của riêng bạn.", cta: "Đặt buổi tư vấn hình thể miễn phí" },
+    access: { badge: "ACCESS", headline: "Bản đồ hướng dẫn" },
+    footer: { logo: "Y_Gym", follow: "Follow Us", voices: "Ý Kiến Khách Hàng", stores: "Chi Nhánh", courses: "Các Khóa Học", news: "Tin tức", faq: "Hỏi và đáp", contact: "Liên hệ đóng góp", disclaimer: "*Toàn bộ hình ảnh nghệ thuật trên trang web được kết xuất thông qua kỹ thuật trí tuệ nhân tạo nâng cao Google AI (Nano Banana) từ những lời văn mô tả sáng tạo nhất.", copyright: "© kể từ 2024 Y_Gym. Bảo lưu mọi quyền." },
+    modal: { title: "Hệ Thống Đặt Lịch Y_Gym", desc: "Trải nghiệm không gian luyện tập thư giãn, riêng tư đỉnh cao dành riêng cho bạn. Hãy điền các thông tin bổ sung để gửi yêu cầu đặt lịch.", nameLabel: "Họ và tên của bạn", namePlaceholder: "Nguyễn Thị Mai", emailLabel: "Địa chỉ email của bạn", emailPlaceholder: "mai@example.com", menuLabel: "Dịch vụ bạn muốn trải nghiệm", counselingTitle: "Tư vấn hình thể chuyên sâu", counselingDesc: "Tìm ra nguyên nhân đau mỏi và phân tích lượng mỡ thừa tích tụ để định hướng khắc phục.", trainingTitle: "Buổi trải nghiệm tập thực tế", trainingDesc: "Tập luyện thực tế trong không gian khép kín tuyệt đối cùng huấn luyện viên riêng.", timeCounseling: "Thời gian khoảng 45 phút", timeTraining: "Thời gian khoảng 60 phút", btnCancel: "Hủy bỏ", btnSubmit: "Gửi yêu cầu đặt lịch", btnSubmitting: "Đang kết nối huấn luyện viên...", successTitle: "Gửi yêu cầu thành công", successThankYou: "Xin chân thành cảm ơn sự tin tưởng của bạn, {name}", successBody: "Hệ thống đã tiếp nhận dữ liệu. Huấn luyện viên cá nhân phù hợp nhất sẽ chủ động liên hệ lại xác nhận sớm nhất qua email ({email}) trong vòng 24h tới.", successBtnClose: "Đóng cửa sổ" }
+  }
+};
+
+
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Globe,
+  ChevronDown,
+  CalendarDays,
+  Plus,
+  Instagram,
+  Facebook,
+  Twitter,
+  MessageCircle,
+  Check,
+  X,
+  ChevronUp,
+  Loader2
+} from "lucide-react";
+
+
+// --- SCROLL TO TOP BUTTON COMPONENT ---
+function ScrollToTopButton() {
+  const [show, setShow] = useState(false);
+  const [isNearBottom, setIsNearBottom] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShow(true);
+      } else {
+        setShow(false);
+      }
+      const totalHeight = document.documentElement.offsetHeight;
+      const windowHeight = window.innerHeight;
+      const scrolledHeight = window.scrollY;
+      if (totalHeight - (windowHeight + scrolledHeight) < 150) {
+        setIsNearBottom(true);
+      } else {
+        setIsNearBottom(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  return (
+    <button
+      onClick={scrollToTop}
+      className={`fixed right-6 md:right-10 z-[120] w-12 h-12 md:w-14 md:h-14 bg-white/70 backdrop-blur-md text-[#831a34] rounded-full shadow-[0_4px_24px_rgba(131,26,52,0.12)] border border-[#ddbfc2]/50 flex items-center justify-center group overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#831a34]/30 cursor-pointer transition-all duration-500 ease-out ${
+        show ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
+      }`}
+      style={{ bottom: isNearBottom ? "80px" : "32px" }}
+      aria-label="トップに戻る"
+    >
+      <div className="absolute inset-0 bg-[#831a34] opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out z-0" />
+      <ChevronUp
+        strokeWidth={1.5}
+        className="w-5 h-5 md:w-6 md:h-6 relative z-10 text-[#831a34] group-hover:text-white transition-all duration-500 ease-out group-hover:-translate-y-1"
+      />
+    </button>
+  );
+}
+
+// --- BOOKING MODAL COMPONENT ---
+function BookingModal({ isOpen, onClose, lang }: { isOpen: boolean, onClose: () => void, lang: string }) {
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [menu, setMenu] = useState("counseling");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const t = translations[lang]?.modal || translations["ja"].modal;
+
+  useEffect(() => {
+    let frame1: number;
+    let frame2: number;
+    let timer: any;
+
+    if (isOpen) {
+      setShouldRender(true);
+      document.body.style.overflow = "hidden";
+      frame1 = requestAnimationFrame(() => {
+        frame2 = requestAnimationFrame(() => {
+          setIsAnimating(true);
+        });
+      });
+    } else {
+      setIsAnimating(false);
+      timer = setTimeout(() => {
+        setShouldRender(false);
+        document.body.style.overflow = "";
+      }, 500);
+    }
+
+    return () => {
+      if (frame1) cancelAnimationFrame(frame1);
+      if (frame2) cancelAnimationFrame(frame2);
+      if (timer) clearTimeout(timer);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !email) return;
+
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSuccess(true);
+    }, 1500);
+  };
+
+  const handleCloseAll = () => {
+    onClose();
+    setTimeout(() => {
+      setIsSuccess(false);
+      setName("");
+      setEmail("");
+      setMenu("counseling");
+    }, 500);
+  };
+
+  if (!shouldRender) return null;
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <div 
+        onClick={handleCloseAll} 
+        className={`absolute inset-0 bg-stone-950/60 backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isAnimating ? 'opacity-100' : 'opacity-0 backdrop-blur-none'}`} 
+      />
+      <div 
+        className={`relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-[#ddbfc2]/30 z-[210] max-h-[90vh] flex flex-col transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isAnimating ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2'}`} 
+        role="dialog" 
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        aria-describedby="modal-desc"
+      >
+        <div className="bg-[#831a34] px-6 py-4 flex justify-between items-center text-white shrink-0">
+          <div className="flex items-center space-x-2">
+            <CalendarDays className="w-5 h-5 text-[#eedbde]" />
+            <h2 id="modal-title" className="font-heading font-semibold tracking-wider text-sm sm:text-base m-0">{t.title}</h2>
+          </div>
+          <button aria-label="閉じる" onClick={handleCloseAll} className="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-full transition-colors focus:outline-none cursor-pointer">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+        <div className="p-6 sm:p-8 overflow-y-auto flex-grow" style={{ WebkitOverflowScrolling: "touch" }}>
+          {isSuccess ? (
+            <div className="py-6 px-4 flex flex-col items-center text-center space-y-6">
+              <div className="relative">
+                <div className="absolute inset-0 bg-[#eedbde]/50 rounded-full blur-xl scale-125" />
+                <Check className="w-16 h-16 text-[#831a34] relative bg-[#eedbde]/40 p-3 rounded-full" />
+              </div>
+              <h3 className="font-heading text-xl md:text-2xl font-bold text-[#4A0E0E]">{t.successTitle}</h3>
+              <div className="max-w-xs space-y-2">
+                <p className="font-body text-sm text-[#4A0E0E] font-medium">{t.successThankYou.replace("{name}", name)}</p>
+                <p className="font-body text-xs text-stone-500 leading-relaxed">{t.successBody.replace("{email}", email)}</p>
+              </div>
+              <button onClick={handleCloseAll} className="mt-6 px-10 py-3 bg-[#831a34] text-white rounded-full font-semibold text-sm hover:opacity-95 transition-opacity shadow-md cursor-pointer">
+                {t.successBtnClose}
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="text-center pb-4 border-b border-[#ddbfc2]/20">
+                <p id="modal-desc" className="font-body text-xs sm:text-sm text-[#695b5e] leading-relaxed">{t.desc}</p>
+              </div>
+              <div>
+                <label htmlFor="modal-name" className="block text-xs uppercase font-semibold text-[#4A0E0E] tracking-wider mb-2 font-body">
+                  {t.nameLabel} <span className="text-[#831a34] font-bold">*</span>
+                </label>
+                <input id="modal-name" type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder={t.namePlaceholder} className="w-full px-4 py-3 border border-[#ddbfc2]/40 rounded-xl focus:border-[#831a34] focus:ring-1 focus:ring-[#831a34] outline-none transition-colors text-sm sm:text-base font-body bg-stone-50" />
+              </div>
+              <div>
+                <label htmlFor="modal-email" className="block text-xs uppercase font-semibold text-[#4A0E0E] tracking-wider mb-2 font-body">
+                  {t.emailLabel} <span className="text-[#831a34] font-bold">*</span>
+                </label>
+                <input id="modal-email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t.emailPlaceholder} className="w-full px-4 py-3 border border-[#ddbfc2]/40 rounded-xl focus:border-[#831a34] focus:ring-1 focus:ring-[#831a34] outline-none transition-colors text-sm sm:text-base font-body bg-stone-50" />
+              </div>
+              <div>
+                <span className="block text-xs uppercase font-semibold text-[#4A0E0E] tracking-wider mb-3 font-body">
+                  {t.menuLabel} <span className="text-[#831a34] font-bold">*</span>
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <label className={`cursor-pointer border rounded-xl p-4 flex flex-col justify-between transition-all duration-300 ${menu === "counseling" ? "border-[#831a34] bg-[#eedbde]/15 shadow-sm" : "border-[#ddbfc2]/30 hover:border-[#831a34]/50 bg-white"}`}>
+                    <input type="radio" name="modal-menu" value="counseling" checked={menu === "counseling"} onChange={() => setMenu("counseling")} className="sr-only" />
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold text-[#831a34] bg-[#eedbde] px-2 py-0.5 rounded-full">{t.timeCounseling}</span>
+                      <div className={`w-4.5 h-4.5 rounded-full border flex items-center justify-center transition-colors ${menu === "counseling" ? "border-[#831a34] bg-[#831a34]" : "border-[#ddbfc2]"}`}>
+                        {menu === "counseling" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                      </div>
+                    </div>
+                    <span className="font-heading text-sm font-semibold text-[#4A0E0E]">{t.counselingTitle}</span>
+                    <p className="font-body text-[10px] text-stone-500 mt-1 leading-normal">{t.counselingDesc}</p>
+                  </label>
+                  <label className={`cursor-pointer border rounded-xl p-4 flex flex-col justify-between transition-all duration-300 ${menu === "training" ? "border-[#831a34] bg-[#eedbde]/15 shadow-sm" : "border-[#ddbfc2]/30 hover:border-[#831a34]/50 bg-white"}`}>
+                    <input type="radio" name="modal-menu" value="training" checked={menu === "training"} onChange={() => setMenu("training")} className="sr-only" />
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold text-[#831a34] bg-[#eedbde] px-2 py-0.5 rounded-full">{t.timeTraining}</span>
+                      <div className={`w-4.5 h-4.5 rounded-full border flex items-center justify-center transition-colors ${menu === "training" ? "border-[#831a34] bg-[#831a34]" : "border-[#ddbfc2]"}`}>
+                        {menu === "training" && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                      </div>
+                    </div>
+                    <span className="font-heading text-sm font-semibold text-[#4A0E0E]">{t.trainingTitle}</span>
+                    <p className="font-body text-[10px] text-stone-500 mt-1 leading-normal">{t.trainingDesc}</p>
+                  </label>
+                </div>
+              </div>
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                <button type="button" onClick={handleCloseAll} className="w-full sm:w-1/3 py-3 border border-[#ddbfc2] text-stone-600 rounded-full font-medium text-sm hover:bg-stone-50 transition-colors focus:outline-none focus:ring-2 focus:ring-[#eedbde] cursor-pointer">{t.btnCancel}</button>
+                <button type="submit" disabled={isSubmitting} className="w-full sm:w-2/3 py-3 bg-[#831a34] text-white rounded-full font-semibold text-sm hover:opacity-95 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer">
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>{t.btnSubmitting}</span>
+                    </>
+                  ) : (
+                    <span>{t.btnSubmit}</span>
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- MAIN APP COMPONENT ---
+function App() {
+  const [lang, setLang] = useState("ja");
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState<Record<number, boolean>>({});
+
+  const langMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("lang", lang);
+  }, [lang]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
+        setIsLangMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => { document.removeEventListener("mousedown", handleClickOutside); };
+  }, []);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const reveals = document.querySelectorAll(".reveal, .reveal-left, .reveal-right");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    reveals.forEach((reveal) => { observer.observe(reveal); });
+    return () => { observer.disconnect(); };
+  }, [lang]);
+
+  const t = translations[lang] || translations["ja"];
+
+  const toggleFaq = (id: number) => {
+    setFaqOpen((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const currentLangName = languages.find((l) => l.code === lang)?.name || "日本語";
+
+  const easeInOutCubic = (time: number) => {
+    return time < 0.5 ? 4 * time * time * time : 1 - Math.pow(-2 * time + 2, 3) / 2;
+  };
+
+  const handleSmoothScroll = (e: React.MouseEvent, targetId: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+
+    if (targetId === '#') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const target = document.getElementById(targetId.substring(1));
+    if (!target) return;
+
+    const header = document.getElementById('main-nav');
+    const headerHeight = header ? header.offsetHeight : 80;
+
+    const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight;
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    
+    const absDistance = Math.abs(distance);
+    let duration = 800; 
+    if (absDistance < 500) {
+      duration = 600 + (absDistance / 500) * 100;
+    } else if (absDistance < 1500) {
+      duration = 800 + ((absDistance - 500) / 1000) * 100;
+    } else {
+      duration = Math.min(1200, 900 + ((absDistance - 1500) / 2000) * 300);
+    }
+
+    let startTime: number | null = null;
+
+    const animation = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+      
+      const ease = easeInOutCubic(progress);
+      window.scrollTo(0, startPosition + distance * ease);
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
+
+  const faqs = [
+    { id: 1, question: t.faq.q1, answer: t.faq.a1 },
+    { id: 2, question: t.faq.q2, answer: t.faq.a2 },
+    { id: 3, question: t.faq.q3, answer: t.faq.a3 },
+    { id: 4, question: t.faq.q4, answer: t.faq.a4 },
+    { id: 5, question: t.faq.q5, answer: t.faq.a5 },
+  ];
+
+  return (
+    <div className="bg-white text-[#333333] font-sans antialiased overflow-x-hidden pt-20">
+      {/* NAVIGATION */}
+      <nav id="main-nav" className={`fixed top-0 w-full z-[110] transition-all duration-300 ${isMobileMenuOpen ? "bg-transparent border-transparent shadow-none" : "glass-nav border-b border-[#ddbfc2]/20"}`}>
+        <div className="flex justify-between items-center px-6 py-4 md:py-5 max-w-[1200px] mx-auto">
+          <a id="nav-logo" onClick={(e) => handleSmoothScroll(e, '#')} className={`font-heading text-xl md:text-2xl text-[#4A0E0E] font-bold tracking-widest transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-0 md:opacity-100" : "opacity-100"}`} href="#">
+            {t.nav.logo}
+          </a>
+
+          {/* Desktop Nav Links */}
+          <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
+            <a onClick={(e) => handleSmoothScroll(e, '#concept')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#concept">{t.nav.concept}</a>
+            <a onClick={(e) => handleSmoothScroll(e, '#reasons')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#reasons">{t.nav.features}</a>
+            <a onClick={(e) => handleSmoothScroll(e, '#pricing')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#pricing">{t.nav.pricing}</a>
+            <a onClick={(e) => handleSmoothScroll(e, '#faq')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#faq">{t.nav.faq}</a>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            {/* Language Selector Dropdown (Desktop) */}
+            <div ref={langMenuRef} className="relative hidden md:inline-block">
+              <button aria-haspopup="listbox" aria-expanded={isLangMenuOpen} onClick={() => setIsLangMenuOpen(!isLangMenuOpen)} className="flex items-center space-x-1.5 px-3 py-2 rounded-full border border-[#ddbfc2]/40 hover:border-[#831a34]/40 hover:bg-[#831a34]/5 text-stone-700 transition-colors duration-300 text-xs font-semibold cursor-pointer outline-none">
+                <Globe className="w-3.5 h-3.5 text-[#831a34]" />
+                <span>{currentLangName}</span>
+                <ChevronDown className={`w-3 h-3 text-stone-500 transition-transform duration-200 ${isLangMenuOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              <div role="listbox" className={`absolute left-1/2 -translate-x-1/2 mt-2 w-40 bg-white/95 backdrop-blur-md border border-[#ddbfc2]/35 shadow-xl rounded-xl z-[150] py-1.5 origin-top transition-all duration-300 ${isLangMenuOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-2 pointer-events-none"}`}>
+                {languages.map((z) => (
+                  <button role="option" aria-selected={lang === z.code} key={z.code} onClick={() => { setLang(z.code); setIsLangMenuOpen(false); }} className={`group w-full text-left px-3 py-2.5 text-xs transition-colors duration-300 cursor-pointer flex items-center justify-start space-x-2 ${lang === z.code ? "bg-[#831a34]/5 text-[#831a34] font-semibold" : "text-stone-700 hover:bg-[#831a34]/5 hover:text-[#831a34]"}`}>
+                    <div className="w-3.5 flex justify-center items-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                      {lang === z.code && <Check className="w-3.5 h-3.5 text-[#831a34]" />}
+                    </div>
+                    <span className="flex items-center space-x-2">
+                      <span className="shrink-0">{z.flag}</span>
+                      <span className="relative inline-block transition-all duration-300 group-hover:font-bold group-hover:scale-105 origin-left">{z.name}</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop CTA Button */}
+            <button onClick={() => setIsModalOpen(true)} className="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-[#831a34] text-white rounded-full text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer font-body btn-shine">
+              <span className="btn-shine-content">
+                <CalendarDays className="mr-2 w-4 h-4" />
+                {t.nav.cta}
+              </span>
+            </button>
+
+            {/* Hamburger Button (Mobile) */}
+            <button id="menu-toggle-btn" aria-label="メニュー" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden flex flex-col justify-center items-center w-10 h-10 text-[#630020] z-[103] relative focus:outline-none">
+              <div className="w-6 h-5 flex flex-col justify-between items-center relative">
+                <span className={`h-[2px] w-full bg-[#630020] rounded transform transition-all duration-300 origin-center ${isMobileMenuOpen ? "rotate-45 translate-y-[9px]" : ""}`} />
+                <span className={`h-[2px] w-full bg-[#630020] rounded transition-all duration-300 ${isMobileMenuOpen ? "opacity-0 scale-x-0" : ""}`} />
+                <span className={`h-[2px] w-full bg-[#630020] rounded transform transition-all duration-300 origin-center ${isMobileMenuOpen ? "-rotate-45 -translate-y-[9px]" : ""}`} />
+              </div>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* MOBILE MENU OVERLAY & DRAW_OUT */}
+      <div id="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)} className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[105] md:hidden transition-opacity duration-300 ease-in-out ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} />
+      <div id="mobile-menu" className={`fixed top-0 right-0 bottom-0 w-[280px] sm:w-[320px] bg-white z-[106] md:hidden flex flex-col items-center justify-start pt-24 px-6 shadow-2xl transition-transform duration-300 ease-in-out pb-[calc(2rem+env(safe-area-inset-bottom))] ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`} style={{ overflowY: "auto" }}>
+        <div className="flex flex-col space-y-6 text-center w-full shrink-0">
+          <a onClick={(e) => handleSmoothScroll(e, '#concept')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#concept">{t.nav.concept}</a>
+          <a onClick={(e) => handleSmoothScroll(e, '#reasons')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#reasons">{t.nav.features}</a>
+          <a onClick={(e) => handleSmoothScroll(e, '#pricing')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#pricing">{t.nav.pricing}</a>
+          <a onClick={(e) => handleSmoothScroll(e, '#faq')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#faq">{t.nav.faq}</a>
+          <a onClick={(e) => handleSmoothScroll(e, '#access')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#access">{t.nav.access}</a>
+
+          <div className="pt-4">
+            <button onClick={() => { setIsMobileMenuOpen(false); setIsModalOpen(true); }} className="mobile-nav-link inline-flex items-center justify-center w-full py-3 bg-[#831a34] text-white rounded-full font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer text-center font-body btn-shine">
+              <span className="btn-shine-content">
+                <CalendarDays className="mr-2 w-4 h-4" />
+                {t.nav.cta}
+              </span>
+            </button>
+          </div>
+
+          {/* Mobile Language Selector */}
+          <div className="pt-4 border-t border-[#ddbfc2]/20 mt-2 text-left w-full shrink-0">
+            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2.5 block flex items-center space-x-1 font-body">
+              <Globe className="w-3.5 h-3.5 text-stone-400" />
+              <span>Language / 言語</span>
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              {languages.map((z) => (
+                <button key={z.code} onClick={() => { setLang(z.code); setIsMobileMenuOpen(false); }} className={`px-3 py-2 text-[10px] sm:text-xs rounded-xl flex items-center justify-between border transition-all cursor-pointer font-body ${lang === z.code ? "border-[#831a34] bg-[#831a34]/5 text-[#831a34] font-semibold" : "border-stone-200 text-stone-700 bg-stone-50 hover:bg-stone-100"}`}>
+                  <span className="flex items-center space-x-1">
+                    <span>{z.flag}</span>
+                    <span>{z.name}</span>
+                  </span>
+                  {lang === z.code && <span className="w-1.5 h-1.5 rounded-full bg-[#831a34]" />}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Follow Icons */}
+        <div className="mt-auto pt-8 pb-4 border-t border-[#ddbfc2]/10 w-full text-[#630020] shrink-0">
+          <p className="text-center text-[10px] text-[#630020]/40 tracking-wider uppercase mb-4 font-heading">{t.footer.follow}</p>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-4 max-w-[240px] mx-auto">
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="LINE" className="flex items-center space-x-2.5 group sns-link">
+              <div className="w-8 h-8 rounded-full bg-[#630020] flex items-center justify-center p-1.5 shrink-0 text-white sns-icon"><MessageCircle className="w-4 h-4" /></div>
+              <span className="font-body text-xs text-[#630020] font-medium">LINE</span>
+            </a>
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex items-center space-x-2.5 group sns-link">
+              <div className="w-8 h-8 rounded-full bg-[#630020] flex items-center justify-center p-1.5 shrink-0 text-white sns-icon"><Instagram className="w-4 h-4" /></div>
+              <span className="font-body text-xs text-[#630020] font-medium">Instagram</span>
+            </a>
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex items-center space-x-2.5 group sns-link">
+              <div className="w-8 h-8 rounded-full bg-[#630020] flex items-center justify-center p-1.5 shrink-0 text-white sns-icon"><Facebook className="w-4 h-4" /></div>
+              <span className="font-body text-xs text-[#630020] font-medium">Facebook</span>
+            </a>
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="flex items-center space-x-2.5 group sns-link">
+              <div className="w-8 h-8 rounded-full bg-[#630020] flex items-center justify-center p-1.5 shrink-0 text-white sns-icon"><Twitter className="w-4 h-4" /></div>
+              <span className="font-body text-xs text-[#630020] font-medium">X</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <main>
+      {/* HERO SECTION */}
+      <section className="relative flex items-center justify-center pt-32 pb-24 md:pt-44 md:pb-36 overflow-hidden md:min-h-[82vh]">
+        <div className="absolute inset-0 z-0">
+          <img alt="" fetchPriority="high" className="w-full h-full object-cover opacity-45 mix-blend-multiply" referrerPolicy="no-referrer" src="https://lh3.googleusercontent.com/d/14avGmKq7l3NkRzy7VztLbtgfXs2923JT" />
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-white to-transparent" />
+        </div>
+        <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 reveal flex flex-col items-center text-center">
+          <span className="font-heading text-sm text-[#4A0E0E] mb-6 tracking-[0.2em] uppercase font-bold">{t.hero.brand}</span>
+          <h1 className="font-heading mb-8 fluid-h1 font-bold leading-tight text-[#4A0E0E]">
+            {t.hero.headline}<br />
+            <span className="inline-block">{t.hero.headlineHighlight}</span>
+          </h1>
+          <p className="font-body text-base md:text-lg text-[#333333] max-w-2xl mx-auto mb-12 fluid-body leading-relaxed">
+            <span className="block md:inline-block" dangerouslySetInnerHTML={{ __html: t.hero.body1 }} /><br className="hidden md:inline" />
+            <span className="block md:inline-block" dangerouslySetInnerHTML={{ __html: t.hero.body2 }} />
+          </p>
+          <div className="flex flex-col gap-4 w-full md:w-auto">
+            <button onClick={() => setIsModalOpen(true)} className="inline-flex items-center justify-center px-8 py-4 bg-[#831a34] text-white rounded-full font-semibold hover:opacity-90 transition-opacity pulse-soft w-full md:w-auto text-sm shadow-md cursor-pointer font-body btn-shine">
+              <span className="btn-shine-content">
+                <CalendarDays className="mr-2 w-5 h-5" />
+                {t.hero.cta}
+              </span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* CONCEPT SECTION */}
+      <section className="py-16 md:py-24 bg-[#F0F3FF] overflow-hidden" id="concept">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="flex flex-col md:flex-row gap-12 lg:gap-24 items-center">
+            <div className="relative reveal w-full md:w-1/2">
+              <div className="aspect-video rounded-xl overflow-hidden shadow-sm bg-white">
+                <img alt="清潔感のある完全個室トレーニングルーム" loading="lazy" decoding="async" className="w-full h-full object-cover object-center" referrerPolicy="no-referrer" src="https://lh3.googleusercontent.com/d/1SobY-TFmTnOadDuW5IL3smVouqvsqsZs" />
+              </div>
+              <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-[#eedbde] rounded-full -z-10 blur-3xl opacity-60" />
+            </div>
+            <div className="reveal w-full md:w-1/2 text-center md:text-left">
+              <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-semibold">{t.concept.badge}</span>
+              <h2 className="font-heading mb-12 md:mb-14 fluid-h2 font-bold text-[#4A0E0E]">{t.concept.headline}</h2>
+              <p className="text-[#333333] font-body text-[14.5px] md:text-[16px] text-center md:text-left fluid-body leading-[2.2] tracking-wide">
+                <span className="block" dangerouslySetInnerHTML={{ __html: t.concept.body1 }} />
+                <span className="block" dangerouslySetInnerHTML={{ __html: t.concept.body2 }} />
+                <span className="block" dangerouslySetInnerHTML={{ __html: t.concept.body3 }} />
+                <span className="block" dangerouslySetInnerHTML={{ __html: t.concept.body4 }} />
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* REASONS SECTION */}
+      <section className="py-16 md:py-24 bg-white overflow-hidden" id="reasons">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-20 reveal">
+            <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-bold tracking-wider">{t.reasons.badge}</span>
+            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{t.reasons.headline}</h2>
+          </div>
+
+          <div className="space-y-24 md:space-y-32 flex flex-col">
+            {/* Reason 1 */}
+            <article className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-20 reveal-left">
+              <div className="w-full md:w-1/2 order-1 md:order-2">
+                <div className="aspect-video rounded-xl overflow-hidden shadow-sm">
+                  <img alt="無料レンタルウェアとシューズ" loading="lazy" decoding="async" className="w-full h-full object-cover" referrerPolicy="no-referrer" src="https://lh3.googleusercontent.com/d/14gNH1WMEUjZJGOKIIc5gDP4lnwdBbpux" />
+                </div>
+              </div>
+              <div className="w-full md:w-1/2 order-2 md:order-1 text-center md:text-left">
+                <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] mb-6 fluid-h3" dangerouslySetInnerHTML={{ __html: t.reasons.r1Title }} />
+                <p className="font-body text-[#333333] text-center md:text-left fluid-body leading-relaxed" dangerouslySetInnerHTML={{ __html: t.reasons.r1Body }} />
+              </div>
+            </article>
+
+            {/* Reason 2 */}
+            <article className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-20 reveal-right">
+              <div className="w-full md:w-1/2">
+                <div className="aspect-video rounded-xl overflow-hidden shadow-sm bg-neutral-100">
+                  <img alt="プライベート空間でのトレーニング" loading="lazy" decoding="async" className="w-full h-full object-cover" referrerPolicy="no-referrer" src="https://lh3.googleusercontent.com/d/19yvau8pddogcJ-_wY-7QYGK9cebpk7hy" />
+                </div>
+              </div>
+              <div className="w-full md:w-1/2 text-center md:text-left">
+                <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] mb-6 fluid-h3" dangerouslySetInnerHTML={{ __html: t.reasons.r2Title }} />
+                <p className="font-body text-[#333333] fluid-body leading-relaxed" dangerouslySetInnerHTML={{ __html: t.reasons.r2Body }} />
+              </div>
+            </article>
+
+            {/* Reason 3 */}
+            <article className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-20 reveal-left">
+              <div className="w-full md:w-1/2 order-1 md:order-2">
+                <div className="aspect-video rounded-xl overflow-hidden shadow-sm">
+                  <img alt="専属トレーナーによるマンツーマン指導" loading="lazy" decoding="async" className="w-full h-full object-cover" referrerPolicy="no-referrer" src="https://lh3.googleusercontent.com/d/1SisybJ9RTBFoFq1V4G1t1f2WisnsCuka" />
+                </div>
+              </div>
+              <div className="w-full md:w-1/2 order-2 md:order-1 text-center md:text-left">
+                <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] mb-6 fluid-h3" dangerouslySetInnerHTML={{ __html: t.reasons.r3Title }} />
+                <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-2">
+                  <p className="font-body text-[#333333] fluid-body leading-relaxed" dangerouslySetInnerHTML={{ __html: t.reasons.r3Body1 }} />
+                  <p className="font-body text-[#333333] fluid-body leading-relaxed" dangerouslySetInnerHTML={{ __html: t.reasons.r3Body2 }} />
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING SECTION */}
+      <section className="py-16 md:py-24 bg-[#F0F3FF] overflow-hidden" id="pricing">
+        <div className="max-w-[1200px] mx-auto px-6 text-center">
+          <div className="reveal mb-16">
+            <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-bold tracking-wider">{t.pricing.badge}</span>
+            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{t.pricing.headline}</h2>
+          </div>
+
+          <div className="flex flex-col md:grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* Standard Plan */}
+            <article className="reveal order-2 md:order-none flex flex-col">
+              <div className="bg-white border border-[#ddbfc2] rounded-xl p-8 flex flex-col items-center hover:-translate-y-3 hover:shadow-[0_20px_40px_rgba(131,26,52,0.08)] transition-all duration-300 ease-out flex-grow h-full">
+                <h3 className="font-heading text-2xl font-bold mb-4 text-[#4A0E0E]">{t.pricing.planStandard}</h3>
+                <div className="font-body text-[#333333] text-xs sm:text-sm uppercase tracking-wider mb-6">{t.pricing.monthly}</div>
+                <div className="text-3xl font-heading font-bold mb-8 text-[#4A0E0E]">¥8,800<span className="text-sm font-normal text-[#333333] ml-1 font-body">{t.pricing.perMonth}</span></div>
+                <ul className="text-left space-y-4 mb-8 flex-grow w-full border-t border-[#ddbfc2]/30 pt-6 font-body text-sm">
+                  <li className="flex items-start"><Check className="text-[#630020] mr-2 w-5 h-5 flex-shrink-0" />{t.pricing.stdBenefit1}</li>
+                  <li className="flex items-start"><Check className="text-[#630020] mr-2 w-5 h-5 flex-shrink-0" />{t.pricing.stdBenefit2}</li>
+                </ul>
+                <button onClick={() => setIsModalOpen(true)} className="w-full py-3 rounded-full border border-[#630020] text-[#630020] font-medium text-sm hover:bg-slate-100 cursor-pointer transition-colors font-body">{t.pricing.detail}</button>
+              </div>
+            </article>
+
+            {/* Free Trial Plan */}
+            <article className="reveal order-1 md:order-none flex flex-col">
+              <div className="bg-white border-2 border-[#831a34] rounded-xl p-8 flex flex-col items-center relative transform md:-translate-y-4 shadow-sm hover:-translate-y-3 md:hover:-translate-y-7 hover:shadow-[0_24px_48px_rgba(131,26,52,0.12)] transition-all duration-300 ease-out flex-grow h-full">
+                <div className="absolute -top-4 bg-[#831a34] text-white px-4 py-1 rounded-full text-[10px] font-bold tracking-wider font-body">{t.pricing.recommended}</div>
+                <h3 className="font-heading text-2xl font-bold text-[#4A0E0E] mb-4 mt-4 md:mt-0">{t.pricing.planFreeTrial}</h3>
+                <div className="font-body text-[#333333] text-xs sm:text-sm uppercase tracking-wider mb-6">{t.pricing.firstTimeOnly}</div>
+                <div className="text-4xl font-heading font-bold text-[#630020] mb-8">¥0</div>
+                <ul className="text-left space-y-4 mb-8 flex-grow w-full border-t border-[#ddbfc2]/30 pt-6 font-body text-sm">
+                  <li className="flex items-start"><Check className="text-[#630020] mr-2 w-5 h-5 flex-shrink-0" />{t.pricing.freeBenefit1}</li>
+                  <li className="flex items-start"><Check className="text-[#630020] mr-2 w-5 h-5 flex-shrink-0" />{t.pricing.freeBenefit2}</li>
+                  <li className="flex items-start"><Check className="text-[#630020] mr-2 w-5 h-5 flex-shrink-0" />{t.pricing.freeBenefit3}</li>
+                </ul>
+                <button onClick={() => setIsModalOpen(true)} className="w-full py-3 rounded-full bg-[#831a34] text-white font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer font-body btn-shine">
+                  <span className="btn-shine-content">
+                    {t.pricing.bookFree}
+                  </span>
+                </button>
+              </div>
+            </article>
+
+            {/* Premium Plan */}
+            <article className="reveal order-3 md:order-none flex flex-col">
+              <div className="bg-white border border-[#ddbfc2] rounded-xl p-8 flex flex-col items-center hover:-translate-y-3 hover:shadow-[0_20px_40px_rgba(131,26,52,0.08)] transition-all duration-300 ease-out flex-grow h-full">
+                <h3 className="font-heading text-2xl font-bold mb-4 text-[#4A0E0E]">{t.pricing.planPremium}</h3>
+                <div className="font-body text-[#333333] text-xs sm:text-sm uppercase tracking-wider mb-6">{t.pricing.monthly}</div>
+                <div className="text-3xl font-heading font-bold mb-8 text-[#4A0E0E]">¥13,800<span className="text-sm font-normal text-[#333333] ml-1 font-body">{t.perMonth}</span></div>
+                <ul className="text-left space-y-4 mb-8 flex-grow w-full border-t border-[#ddbfc2]/30 pt-6 font-body text-sm">
+                  <li className="flex items-start"><Check className="text-[#630020] mr-2 w-5 h-5 flex-shrink-0" />{t.pricing.premBenefit1}</li>
+                  <li className="flex items-start"><Check className="text-[#630020] mr-2 w-5 h-5 flex-shrink-0" />{t.pricing.premBenefit2}</li>
+                  <li className="flex items-start"><Check className="text-[#630020] mr-2 w-5 h-5 flex-shrink-0" />{t.pricing.premBenefit3}</li>
+                </ul>
+                <button onClick={() => setIsModalOpen(true)} className="w-full py-3 rounded-full border border-[#630020] text-[#630020] font-medium text-sm hover:bg-slate-100 cursor-pointer transition-colors font-body">{t.pricing.detail}</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ SECTION */}
+      <section className="py-16 md:py-24 bg-white overflow-hidden" id="faq">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-16 reveal">
+            <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-bold tracking-wider">{t.faq.badge}</span>
+            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{t.faq.headline}<span className="inline-block">{t.faq.headlineHighlight}</span></h2>
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-6">
+            {faqs.map((z) => (
+              <div className="reveal" key={z.id}>
+                <div className={`faq-item bg-white border border-[#ddbfc2]/20 rounded-xl overflow-hidden transition-all ${faqOpen[z.id] ? "active" : ""}`}>
+                  <button aria-expanded={!!faqOpen[z.id]} onClick={() => toggleFaq(z.id)} className="faq-toggle w-full flex items-center justify-between px-4 md:px-6 py-4 md:p-6 text-left group transition-all focus:outline-none">
+                    <div className="flex items-center gap-3 md:gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#630020] flex-shrink-0 flex items-center justify-center text-white font-bold text-sm md:text-base font-heading">Q</div>
+                      <h3 className="font-heading text-[13px] sm:text-sm md:text-lg font-bold text-[#4A0E0E] pr-2 md:pr-0" dangerouslySetInnerHTML={{ __html: z.question }} />
+                    </div>
+                    <div className={`faq-icon-wrapper relative w-6 h-6 flex-shrink-0 transition-transform duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] ${faqOpen[z.id] ? "rotate-45" : ""}`}>
+                      <Plus className="absolute inset-0 text-[#630020] w-6 h-6" />
+                    </div>
+                  </button>
+                  
+                  <div className="faq-content">
+                    <div className="faq-inner">
+                      <div className="px-4 md:px-6 pb-6 pt-4 flex gap-3 md:gap-4 items-start border-t border-[#ddbfc2]/10 bg-rose-50/5">
+                        <div className="w-8 h-8 rounded-full bg-rose-600 flex-shrink-0 flex items-center justify-center text-white font-bold font-heading">A</div>
+                        <p className="font-body text-[14px] md:text-base text-[#333333] pt-1 leading-relaxed" dangerouslySetInnerHTML={{ __html: z.answer }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA SECTION */}
+      <section className="py-16 md:py-24 bg-[#F0F3FF] relative overflow-hidden" id="contact">
+        <div className="absolute inset-0 bg-[#831a34]/[0.05]" />
+        <div className="max-w-[1200px] mx-auto px-6 text-center relative z-10 reveal">
+          <h2 className="font-heading text-headline-xl-mobile md:text-headline-xl font-bold text-[#4A0E0E] mb-8 fluid-h1">
+            {t.finalCta.headline}<span className="inline-block">{t.finalCta.headlineHighlight}</span>
+          </h2>
+          <p className="font-body text-lg text-[#333333] max-w-2xl mx-auto mb-12 fluid-body leading-relaxed md:leading-normal">
+            <span className="block md:inline" dangerouslySetInnerHTML={{ __html: t.finalCta.body1 }} />
+            <span className="block md:inline" dangerouslySetInnerHTML={{ __html: t.finalCta.body2 }} />
+          </p>
+          <button onClick={() => setIsModalOpen(true)} className="inline-flex items-center justify-center px-8 py-4 bg-[#831a34] text-white rounded-full font-semibold hover:opacity-90 transition-opacity pulse-soft w-full md:w-auto text-sm cursor-pointer shadow-md font-body btn-shine">
+            <span className="btn-shine-content">
+              <CalendarDays className="mr-2 w-5 h-5" />
+              {t.finalCta.cta}
+            </span>
+          </button>
+        </div>
+      </section>
+
+      {/* ACCESS SECTION */}
+      <section className="py-16 md:py-24 bg-white overflow-hidden" id="access">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-16 reveal">
+            <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-bold tracking-wider">{t.access.badge}</span>
+            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{t.access.headline}</h2>
+          </div>
+          <div className="reveal overflow-hidden rounded-xl border border-[#ddbfc2] shadow-sm w-full">
+            <iframe allowFullScreen height="450" loading="lazy" referrerPolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3313.4150346383633!2d132.7486835759325!3d33.84033297323719!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x354f9f2bc563364f%3A0x67399435b80b271d!2zSlJR5p2-5bGx6aeF!5e0!3m2!1sja!2sjp!4v1715843200000!5m2!1sja!2sjp" style={{ border: 0 }} width="100%" title="Y_Gym Map" />
+          </div>
+        </div>
+      </section>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="w-full text-[#630020] py-16 bg-[#F0F3FF]">
+        <div className="max-w-[1200px] mx-auto px-6 flex flex-col items-center">
+          <div className="mb-12 text-center">
+            <div className="text-2xl tracking-widest font-heading font-bold text-[#630020]">{t.footer.logo}</div>
+          </div>
+
+          {/* Social Icons */}
+          <div className="grid grid-cols-2 gap-x-12 gap-y-6 mb-12 max-w-[280px] sm:max-w-[320px] mx-auto md:flex md:flex-wrap md:justify-center md:items-center md:gap-6 md:max-w-none">
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="LINE" className="flex items-center space-x-3 group sns-link">
+              <div className="w-10 h-10 rounded-full bg-[#630020] flex items-center justify-center p-2 shrink-0 text-white sns-icon"><MessageCircle className="w-5 h-5" /></div>
+              <span className="font-body text-sm font-semibold text-[#630020]">LINE</span>
+            </a>
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex items-center space-x-3 group sns-link">
+              <div className="w-10 h-10 rounded-full bg-[#630020] flex items-center justify-center p-2 shrink-0 text-white sns-icon"><Instagram className="w-5 h-5" /></div>
+              <span className="font-body text-sm font-semibold text-[#630020]">Instagram</span>
+            </a>
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex items-center space-x-3 group sns-link">
+              <div className="w-10 h-10 rounded-full bg-[#630020] flex items-center justify-center p-2 shrink-0 text-white sns-icon"><Facebook className="w-5 h-5" /></div>
+              <span className="font-body text-sm font-semibold text-[#630020]">Facebook</span>
+            </a>
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="flex items-center space-x-3 group sns-link">
+              <div className="w-10 h-10 rounded-full bg-[#630020] flex items-center justify-center p-2 shrink-0 text-white sns-icon"><Twitter className="w-5 h-5" /></div>
+              <span className="font-body text-sm font-semibold text-[#630020]">X</span>
+            </a>
+          </div>
+
+          {/* Footer Nav */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-12 gap-y-4 mb-16 text-center text-[#630020]/80 text-xs sm:text-sm font-body">
+            <div><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-[#831a34] nav-link-hover">{t.footer.voices}</a></div>
+            <div><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-[#831a34] nav-link-hover">{t.footer.stores}</a></div>
+            <div><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-[#831a34] nav-link-hover">{t.footer.courses}</a></div>
+            <div><a href="#" onClick={(e) => e.preventDefault()} className="hover:text-[#831a34] nav-link-hover">{t.footer.news}</a></div>
+            <div><a href="#faq" onClick={(e) => handleSmoothScroll(e, '#faq')} className="hover:text-[#831a34] nav-link-hover">{t.footer.faq}</a></div>
+            <div><a href="#contact" onClick={(e) => handleSmoothScroll(e, '#contact')} className="hover:text-[#831a34] nav-link-hover">{t.footer.contact}</a></div>
+          </div>
+
+          <div className="text-[10px] md:text-xs text-stone-500 font-body max-w-xl text-center mb-4 leading-relaxed px-4">
+            <span dangerouslySetInnerHTML={{ __html: t.footer.disclaimer }} />
+          </div>
+          <div className="text-[11px] sm:text-xs opacity-60 font-body">{t.footer.copyright}</div>
+        </div>
+      </footer>
+
+      {/* Scroll To Top */}
+      <ScrollToTopButton />
+
+      {/* Booking Modal */}
+      <BookingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} lang={lang} />
+    </div>
+  );
+}
+
+
+const root = createRoot(document.getElementById('root'));
+root.render(<App />);
+  </script>
+</body>
+</html>
