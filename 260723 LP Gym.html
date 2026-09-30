@@ -44,6 +44,11 @@
 }
 </script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script>
+    Babel.registerPreset("typescript-tsx", {
+      plugins: [[Babel.availablePlugins["transform-typescript"], { allExtensions: true, isTSX: true }]]
+    });
+  </script>
   
   <style type="text/css">
 
@@ -267,7 +272,7 @@ button, a, [role="button"], .faq-toggle {
 </head>
 <body>
   <div id="root"></div>
-  <script type="text/babel" data-type="module" data-presets="react" data-plugins="transform-typescript">
+  <script type="text/babel" data-type="module" data-presets="react,typescript-tsx">
 import { createRoot } from 'react-dom/client';
 const languages = [
   { code: "ja", name: "日本語", flag: "🇯🇵" },
