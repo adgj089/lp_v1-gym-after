@@ -880,6 +880,25 @@ function BookingModal({ isOpen, onClose, lang }: { isOpen: boolean, onClose: () 
   );
 }
 
+function parseReasonTitle(rawHtml: string, fallbackNum: string) {
+  if (!rawHtml) return { num: fallbackNum, text: "" };
+  const spanMatch = rawHtml.match(/^<span[^>]*>\s*(\d+\.?)(?:&nbsp;|\s)*<\/span>\s*(.*)/i);
+  if (spanMatch) {
+    return {
+      num: spanMatch[1].endsWith('.') ? spanMatch[1] : `${spanMatch[1]}.`,
+      text: spanMatch[2]
+    };
+  }
+  const textMatch = rawHtml.match(/^(\d+\.?)\s*(.*)/);
+  if (textMatch) {
+    return {
+      num: textMatch[1].endsWith('.') ? textMatch[1] : `${textMatch[1]}.`,
+      text: textMatch[2]
+    };
+  }
+  return { num: fallbackNum, text: rawHtml };
+}
+
 // --- MAIN APP COMPONENT ---
 function App() {
   const [lang, setLang] = useState("ja");
@@ -931,6 +950,10 @@ function App() {
   }, [lang]);
 
   const t = translations[lang] || translations["ja"];
+
+  const r1Parsed = parseReasonTitle(t.reasons?.r1Title, "1.");
+  const r2Parsed = parseReasonTitle(t.reasons?.r2Title, "2.");
+  const r3Parsed = parseReasonTitle(t.reasons?.r3Title, "3.");
 
   const toggleFaq = (id: number) => {
     setFaqOpen((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -1168,7 +1191,13 @@ function App() {
                 </div>
               </div>
               <div className="w-full md:w-1/2 order-2 md:order-1 text-center md:text-left">
-                <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] mb-6 fluid-h3" dangerouslySetInnerHTML={{ __html: t.reasons.r1Title }} />
+                {/* Mobile view (unchanged) */}
+                <h3 className="md:hidden font-heading text-2xl font-bold text-[#4A0E0E] mb-6 fluid-h3 text-center" dangerouslySetInnerHTML={{ __html: t.reasons.r1Title }} />
+                {/* Desktop / Tablet view (separated number & heading) */}
+                <div className="hidden md:flex items-start gap-3.5 lg:gap-4.5 mb-6">
+                  <span className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] shrink-0 w-7 lg:w-8 text-left">{r1Parsed.num}</span>
+                  <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] fluid-h3 text-left leading-snug" dangerouslySetInnerHTML={{ __html: r1Parsed.text }} />
+                </div>
                 <p className="font-body text-[#333333] text-center md:text-left fluid-body leading-relaxed" dangerouslySetInnerHTML={{ __html: t.reasons.r1Body }} />
               </div>
             </article>
@@ -1181,7 +1210,13 @@ function App() {
                 </div>
               </div>
               <div className="w-full md:w-1/2 text-center md:text-left">
-                <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] mb-6 fluid-h3" dangerouslySetInnerHTML={{ __html: t.reasons.r2Title }} />
+                {/* Mobile view (unchanged) */}
+                <h3 className="md:hidden font-heading text-2xl font-bold text-[#4A0E0E] mb-6 fluid-h3 text-center" dangerouslySetInnerHTML={{ __html: t.reasons.r2Title }} />
+                {/* Desktop / Tablet view (separated number & heading) */}
+                <div className="hidden md:flex items-start gap-3.5 lg:gap-4.5 mb-6">
+                  <span className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] shrink-0 w-7 lg:w-8 text-left">{r2Parsed.num}</span>
+                  <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] fluid-h3 text-left leading-snug" dangerouslySetInnerHTML={{ __html: r2Parsed.text }} />
+                </div>
                 <p className="font-body text-[#333333] fluid-body leading-relaxed" dangerouslySetInnerHTML={{ __html: t.reasons.r2Body }} />
               </div>
             </article>
@@ -1194,7 +1229,13 @@ function App() {
                 </div>
               </div>
               <div className="w-full md:w-1/2 order-2 md:order-1 text-center md:text-left">
-                <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] mb-6 fluid-h3" dangerouslySetInnerHTML={{ __html: t.reasons.r3Title }} />
+                {/* Mobile view (unchanged) */}
+                <h3 className="md:hidden font-heading text-2xl font-bold text-[#4A0E0E] mb-6 fluid-h3 text-center" dangerouslySetInnerHTML={{ __html: t.reasons.r3Title }} />
+                {/* Desktop / Tablet view (separated number & heading) */}
+                <div className="hidden md:flex items-start gap-3.5 lg:gap-4.5 mb-6">
+                  <span className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] shrink-0 w-7 lg:w-8 text-left">{r3Parsed.num}</span>
+                  <h3 className="font-heading text-2xl md:text-3xl font-bold text-[#4A0E0E] fluid-h3 text-left leading-snug" dangerouslySetInnerHTML={{ __html: r3Parsed.text }} />
+                </div>
                 <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-2">
                   <p className="font-body text-[#333333] fluid-body leading-relaxed" dangerouslySetInnerHTML={{ __html: t.reasons.r3Body1 }} />
                   <p className="font-body text-[#333333] fluid-body leading-relaxed" dangerouslySetInnerHTML={{ __html: t.reasons.r3Body2 }} />
