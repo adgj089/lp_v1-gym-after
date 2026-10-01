@@ -1,0 +1,8 @@
+{
+  "name": "Y_Gym | プライベートジム",
+  "description": "忙しい女性のためのプライベート空間。無理せず続けて、変われる私へ。手ぶらで通える無料レンタル、完全個室、マンツーマンの丁寧なサポート。",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
