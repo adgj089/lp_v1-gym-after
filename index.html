@@ -1283,9 +1283,9 @@ function App() {
                 <h3 className="font-heading text-3xl md:text-4xl font-bold text-[#4A0E0E] mb-2">{(trainerCopy[lang] || trainerCopy.ja).name}</h3>
                 <p className="font-body text-xs md:text-sm uppercase tracking-[0.18em] text-[#831a34]">{(trainerCopy[lang] || trainerCopy.ja).role}</p>
               </div>
-              <div className="font-body text-[14.5px] md:text-[16px] text-[#333333] fluid-body leading-[2] space-y-3">
+              <div className="font-body text-[14px] sm:text-[14.5px] md:text-[16px] text-[#333333] fluid-body leading-[2] space-y-3">
                 <p>{(trainerCopy[lang] || trainerCopy.ja).body1}</p>
-                <p>{(trainerCopy[lang] || trainerCopy.ja).body2}</p>
+                <p className="max-w-[21rem] sm:max-w-none mx-auto md:mx-0">{(trainerCopy[lang] || trainerCopy.ja).body2}</p>
               </div>
             </div>
           </div>
