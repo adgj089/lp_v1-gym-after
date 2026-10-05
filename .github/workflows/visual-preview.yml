@@ -1,0 +1,71 @@
+name: Visual Preview
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: visual-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    name: Capture LP previews
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Install app dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.63.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local preview server
+        run: |
+          node server.js > /tmp/y-gym-preview-server.log 2>&1 &
+          echo $! > /tmp/y-gym-preview-server.pid
+
+      - name: Wait for preview server
+        run: |
+          for i in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000/ > /dev/null; then
+              echo "Preview server is ready."
+              exit 0
+            fi
+            sleep 1
+          done
+
+          echo "Preview server did not become ready."
+          cat /tmp/y-gym-preview-server.log || true
+          exit 1
+
+      - name: Capture desktop, tablet, and mobile previews
+        env:
+          PREVIEW_URL: http://127.0.0.1:3000/
+        run: node scripts/visual-preview.mjs
+
+      - name: Upload visual preview artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-preview-${{ github.sha }}
+          path: visual-preview/
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 6
