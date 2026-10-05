@@ -899,6 +899,17 @@ function parseReasonTitle(rawHtml: string, fallbackNum: string) {
   return { num: fallbackNum, text: rawHtml };
 }
 
+const trainerCopy: Record<string, { badge: string; headline: string; name: string; role: string; body1: string; body2: string }> = {
+  ja: { badge: "TRAINER", headline: "まずは、あなたのことを聞かせてください。", name: "Yuki", role: "Personal Trainer", body1: "運動が苦手な方も、初めての方も大丈夫。", body2: "一人ひとりのペースに合わせて、無理なく続けられる方法を一緒に見つけていきます。" },
+  en: { badge: "TRAINER", headline: "First, tell me about yourself.", name: "Yuki", role: "Personal Trainer", body1: "It’s okay if exercise is new to you or feels difficult.", body2: "We’ll find a comfortable, sustainable approach that fits your pace." },
+  zh: { badge: "TRAINER", headline: "先从了解你开始。", name: "Yuki", role: "Personal Trainer", body1: "不擅长运动或第一次尝试也没关系。", body2: "我会配合你的节奏，一起找到轻松、可持续的方式。" },
+  ko: { badge: "TRAINER", headline: "먼저, 당신의 이야기를 들려주세요.", name: "Yuki", role: "Personal Trainer", body1: "운동이 어렵거나 처음이어도 괜찮습니다.", body2: "한 분 한 분의 페이스에 맞춰 무리 없이 이어갈 수 있는 방법을 함께 찾아갑니다." },
+  fr: { badge: "TRAINER", headline: "Commençons par parler de vous.", name: "Yuki", role: "Personal Trainer", body1: "Même si vous débutez ou n’êtes pas à l’aise avec le sport, tout va bien.", body2: "Nous trouverons ensemble une approche douce et durable, adaptée à votre rythme." },
+  es: { badge: "TRAINER", headline: "Primero, cuéntame sobre ti.", name: "Yuki", role: "Personal Trainer", body1: "No pasa nada si eres principiante o el ejercicio no es lo tuyo.", body2: "Juntos encontraremos una forma cómoda y sostenible que se adapte a tu ritmo." },
+  th: { badge: "TRAINER", headline: "เริ่มจากเล่าเรื่องของคุณให้เราฟังก่อน", name: "Yuki", role: "Personal Trainer", body1: "ไม่เป็นไรหากคุณไม่ถนัดการออกกำลังกายหรือเพิ่งเริ่มต้น", body2: "เราจะค่อย ๆ หาวิธีที่เหมาะกับจังหวะของคุณและทำต่อได้อย่างสบายใจไปด้วยกัน" },
+  vi: { badge: "TRAINER", headline: "Trước hết, hãy chia sẻ về bạn.", name: "Yuki", role: "Personal Trainer", body1: "Không sao nếu bạn chưa quen tập luyện hoặc mới bắt đầu.", body2: "Chúng ta sẽ cùng tìm cách tập nhẹ nhàng, bền vững và phù hợp với nhịp độ của bạn." }
+};
+
 // --- MAIN APP COMPONENT ---
 function App() {
   const [lang, setLang] = useState("ja");
@@ -1242,6 +1253,41 @@ function App() {
                 </div>
               </div>
             </article>
+          </div>
+        </div>
+      </section>
+
+      {/* TRAINER SECTION */}
+      <section className="py-16 md:py-24 bg-[#FAF5F6] overflow-hidden" id="trainer">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-10 md:mb-14 reveal">
+            <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-bold tracking-wider">{(trainerCopy[lang] || trainerCopy.ja).badge}</span>
+            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{(trainerCopy[lang] || trainerCopy.ja).headline}</h2>
+          </div>
+
+          <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16">
+            <div className="w-full md:w-1/2 reveal-left">
+              <div className="aspect-[4/5] rounded-xl overflow-hidden bg-white">
+                <img
+                  src="./images/trainer-yuki.webp"
+                  alt="パーソナルトレーナー Yuki"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            <div className="w-full md:w-1/2 text-center md:text-left reveal-right">
+              <div className="mb-7 md:mb-8">
+                <h3 className="font-heading text-3xl md:text-4xl font-bold text-[#4A0E0E] mb-2">{(trainerCopy[lang] || trainerCopy.ja).name}</h3>
+                <p className="font-body text-xs md:text-sm uppercase tracking-[0.18em] text-[#831a34]">{(trainerCopy[lang] || trainerCopy.ja).role}</p>
+              </div>
+              <div className="font-body text-[14.5px] md:text-[16px] text-[#333333] fluid-body leading-[2] space-y-3">
+                <p>{(trainerCopy[lang] || trainerCopy.ja).body1}</p>
+                <p>{(trainerCopy[lang] || trainerCopy.ja).body2}</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
