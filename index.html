@@ -1262,7 +1262,16 @@ function App() {
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-10 md:mb-14 reveal">
             <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-bold tracking-wider">{(trainerCopy[lang] || trainerCopy.ja).badge}</span>
-            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{(trainerCopy[lang] || trainerCopy.ja).headline}</h2>
+            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">
+              {lang === 'ja' ? (
+                <>
+                  <span className="lg:hidden">まずは、あなたのことを<br />聞かせてください。</span>
+                  <span className="hidden lg:inline">{trainerCopy.ja.headline}</span>
+                </>
+              ) : (
+                (trainerCopy[lang] || trainerCopy.ja).headline
+              )}
+            </h2>
           </div>
 
           <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16">
