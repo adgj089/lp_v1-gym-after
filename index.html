@@ -669,8 +669,22 @@ function BookingModal({ isOpen, onClose, lang }: { isOpen: boolean, onClose: () 
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="text-center pb-3 border-b border-[#ddbfc2]/20">
-                <p id="modal-desc" className="font-body text-xs sm:text-sm text-[#695b5e] leading-relaxed">{t.desc}</p>
-                <p className="font-body text-[11px] sm:text-xs text-[#831a34] font-semibold leading-relaxed mt-2">{t.demoNotice || "※ポートフォリオ用デモのため、実際の日時予約やメール送信は行われません。"}</p>
+                <p id="modal-desc" className="font-body text-xs sm:text-sm text-[#695b5e] leading-relaxed">
+                  {lang === "ja" ? (
+                    <>
+                      <span className="inline-block">カウンセリング＋体験トレーニングの無料体験を、</span>
+                      <span className="inline-block">デモ操作でご確認いただけます。</span>
+                    </>
+                  ) : t.desc}
+                </p>
+                <p className="font-body text-[11px] sm:text-xs text-[#831a34] font-semibold leading-relaxed mt-2">
+                  {lang === "ja" ? (
+                    <>
+                      <span className="inline-block">※ポートフォリオ用デモのため、</span>
+                      <span className="inline-block">実際の日時予約やメール送信は行われません。</span>
+                    </>
+                  ) : (t.demoNotice || "※ポートフォリオ用デモのため、実際の日時予約やメール送信は行われません。")}
+                </p>
               </div>
 
               {/* 1. お名前 */}
