@@ -1288,10 +1288,10 @@ function App() {
               </div>
               <div className="font-body text-[14px] sm:text-[14.5px] md:text-[16px] text-[#333333] fluid-body leading-[2] space-y-3">
                 <p>{(trainerCopy[lang] || trainerCopy.ja).body1}</p>
-                <p className="max-w-[21rem] sm:max-w-none mx-auto md:mx-0">{(trainerCopy[lang] || trainerCopy.ja).body2}</p>
+                <p className="max-w-[21rem] sm:max-w-none mx-auto md:mx-0">{lang === "ja" ? <><span className="inline-block">一人ひとりのペースに合わせて、</span><span className="inline-block">無理なく続けられる方法を</span><span className="inline-block">一緒に見つけていきます。</span></> : (trainerCopy[lang] || trainerCopy.ja).body2}</p>
                 {lang === "ja" && (
                   <>
-                    <p className="pt-2">運動初心者の女性を中心に、一人ひとりのペースに合わせたサポートを大切にしています。</p>
+                    <p className="pt-2"><span className="inline-block">運動初心者の女性を中心に、</span><span className="inline-block">一人ひとりのペースに合わせた</span><span className="inline-block">サポートを大切にしています。</span></p>
                     <div className="pt-2">
                       <p className="text-xs uppercase tracking-[0.14em] text-[#831a34] font-medium mb-2">得意分野</p>
                       <p>初心者サポート / 女性向けボディメイク</p>
