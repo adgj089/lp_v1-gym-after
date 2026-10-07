@@ -1439,20 +1439,22 @@ function App() {
             <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-bold tracking-wider">{t.access.badge}</span>
             <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{t.access.headline}</h2>
           </div>
-          {lang === "ja" && (
-            <div className="reveal max-w-3xl mx-auto mb-10 text-center font-body text-[#333333]">
-              <h3 className="font-heading text-xl md:text-2xl font-bold text-[#4A0E0E] mb-5">Ebisu Private Gym</h3>
-              <div className="space-y-2 text-sm md:text-base leading-relaxed">
-                <p>東京都渋谷区恵比寿1-XX-XX</p>
-                <p>恵比寿駅 徒歩5分</p>
-                <p>営業時間 9:00〜21:00</p>
-                <p>定休日 月曜日</p>
+          <div className={lang === "ja" ? "flex flex-col lg:grid lg:grid-cols-[2fr_3fr] gap-10 lg:gap-12 lg:items-center" : ""}>
+            {lang === "ja" && (
+              <div className="reveal text-center lg:text-left font-body text-[#333333] lg:pr-2">
+                <h3 className="font-heading text-xl md:text-2xl font-bold text-[#4A0E0E] mb-5">Ebisu Private Gym</h3>
+                <div className="space-y-2 text-sm md:text-base leading-relaxed">
+                  <p>東京都渋谷区恵比寿1-XX-XX</p>
+                  <p>恵比寿駅 徒歩5分</p>
+                  <p>営業時間 9:00〜21:00</p>
+                  <p>定休日 月曜日</p>
+                </div>
+                <p className="mt-5 text-xs text-[#777777] leading-relaxed">※店舗名・住所・店舗情報はポートフォリオ用の架空設定です。</p>
               </div>
-              <p className="mt-5 text-xs text-[#777777] leading-relaxed">※店舗名・住所・店舗情報はポートフォリオ用の架空設定です。</p>
+            )}
+            <div className="reveal overflow-hidden rounded-xl border border-[#ddbfc2] shadow-sm w-full">
+              <iframe allowFullScreen height="450" loading="lazy" referrerPolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=%E6%81%B5%E6%AF%94%E5%AF%BF%E9%A7%85&output=embed" style={{ border: 0 }} width="100%" title="Y_Gym Ebisu Area Map" />
             </div>
-          )}
-          <div className="reveal overflow-hidden rounded-xl border border-[#ddbfc2] shadow-sm w-full">
-            <iframe allowFullScreen height="450" loading="lazy" referrerPolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=%E6%81%B5%E6%AF%94%E5%AF%BF%E9%A7%85&output=embed" style={{ border: 0 }} width="100%" title="Y_Gym Ebisu Area Map" />
           </div>
         </div>
       </section>
