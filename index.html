@@ -1285,6 +1285,16 @@ function App() {
               <div className="font-body text-[14px] sm:text-[14.5px] md:text-[16px] text-[#333333] fluid-body leading-[2] space-y-3">
                 <p>{(trainerCopy[lang] || trainerCopy.ja).body1}</p>
                 <p className="max-w-[21rem] sm:max-w-none mx-auto md:mx-0">{(trainerCopy[lang] || trainerCopy.ja).body2}</p>
+                {lang === "ja" && (
+                  <>
+                    <p className="pt-2">運動初心者の女性を中心に、一人ひとりのペースに合わせたサポートを大切にしています。</p>
+                    <div className="pt-2">
+                      <p className="text-xs uppercase tracking-[0.14em] text-[#831a34] font-medium mb-2">得意分野</p>
+                      <p>初心者サポート / 女性向けボディメイク</p>
+                    </div>
+                    <p className="pt-2 text-xs text-[#777777] leading-relaxed">※人物名・プロフィールはポートフォリオ用の架空設定です。</p>
+                  </>
+                )}
               </div>
             </div>
           </div>
