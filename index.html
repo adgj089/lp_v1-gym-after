@@ -298,7 +298,7 @@ const languages = [
 
 const translations: Record<string, any> = {
   ja: {
-    nav: { logo: "Y_Gym", concept: "Concept", features: "Features", pricing: "Pricing", faq: "FAQ", access: "Access", cta: "無料体験を予約する" },
+    nav: { logo: "Y_Gym", concept: "Concept", features: "Features", trainer: "Trainer", pricing: "Pricing", faq: "FAQ", access: "Access", cta: "無料体験を予約する" },
     hero: { brand: "Matsuyama Boutique Gym", headline: "無理せず続けて、", headlineHighlight: "変われる私へ。", body1: "<span class='inline-block'>運動ゼロでも大丈夫。</span><span class='inline-block'>2ヶ月であの頃の体型へ。</span>", body2: "<span class='inline-block'>忙しい女性のための</span><span class='inline-block'>プライベート空間です。</span>", cta: "無料体験を予約" },
     concept: { badge: "CONCEPT", headline: "がんばる毎日に、心地よく寄り添う場所", body1: "<span class='inline-block'>Y_Gymは、</span><span class='inline-block'>ただ汗を流すだけの</span><span class='inline-block'>場所ではありません。</span>", body2: "<span class='inline-block'>心と体をリセットする</span><span class='inline-block'>空間です。</span>", body3: "<span class='inline-block'>完全個室で</span><span class='inline-block'>トレーニングに集中できます。</span>", body4: "<span class='inline-block'>専属トレーナーが、</span><span class='inline-block'>あなたのペースに合わせて</span><span class='inline-block'>サポートいたします。</span>" },
     reasons: { badge: "Y_Gymの3つの強み", headline: "仕事帰りも手ぶらで。私のままで通える贅沢", r1Title: "<span class='inline-block'>1.&nbsp;</span><span class='inline-block'>手ぶらで通える</span><br class='mobile-br' /><span class='inline-block'>無料レンタル</span>", r1Body: "ウェアやシューズはすべて無料です。<br class='block md:hidden' />仕事帰りにも、気軽に立ち寄れます。", r2Title: "<span class='inline-block'>2.&nbsp;</span><span class='inline-block'>自分磨きに集中できる</span><br class='mobile-br' /><span class='inline-block'>完全個室</span>", r2Body: "周りの目を気にせず、<br class='block md:hidden' />ご利用いただけます。", r3Title: "<span class='inline-block'>3.&nbsp;</span><span class='inline-block'>マンツーマンの</span><br class='mobile-br' /><span class='inline-block'>丁寧なサポート</span>", r3Body1: "プロのトレーナーが、<br class='block md:hidden' />あなたの目標に寄り添います。", r3Body2: "初心者の方も、<br class='block md:hidden' />安心して続けられます。" },
@@ -1048,8 +1048,10 @@ function App() {
           <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
             <a onClick={(e) => handleSmoothScroll(e, '#concept')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#concept">{t.nav.concept}</a>
             <a onClick={(e) => handleSmoothScroll(e, '#reasons')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#reasons">{t.nav.features}</a>
+            <a onClick={(e) => handleSmoothScroll(e, '#trainer')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#trainer">{lang === "ja" ? t.nav.trainer : "Trainer"}</a>
             <a onClick={(e) => handleSmoothScroll(e, '#pricing')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#pricing">{t.nav.pricing}</a>
             <a onClick={(e) => handleSmoothScroll(e, '#faq')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#faq">{t.nav.faq}</a>
+            <a onClick={(e) => handleSmoothScroll(e, '#access')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#access">{t.nav.access}</a>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -1102,6 +1104,7 @@ function App() {
         <div className="flex flex-col space-y-6 text-center w-full shrink-0">
           <a onClick={(e) => handleSmoothScroll(e, '#concept')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#concept">{t.nav.concept}</a>
           <a onClick={(e) => handleSmoothScroll(e, '#reasons')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#reasons">{t.nav.features}</a>
+          <a onClick={(e) => handleSmoothScroll(e, '#trainer')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#trainer">{lang === "ja" ? t.nav.trainer : "Trainer"}</a>
           <a onClick={(e) => handleSmoothScroll(e, '#pricing')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#pricing">{t.nav.pricing}</a>
           <a onClick={(e) => handleSmoothScroll(e, '#faq')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#faq">{t.nav.faq}</a>
           <a onClick={(e) => handleSmoothScroll(e, '#access')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#access">{t.nav.access}</a>
