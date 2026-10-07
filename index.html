@@ -1392,7 +1392,10 @@ function App() {
                 </div>
                 <p className="font-body text-[11px] font-bold tracking-[0.16em] text-[#831a34] mb-2">STEP 1</p>
                 <h3 className="font-heading text-xl font-bold text-[#4A0E0E] mb-4">{t.trialFlow.step1Title}</h3>
-                <p className="font-body text-sm md:text-base text-[#333333] leading-relaxed">{t.trialFlow.step1Body}</p>
+                <p className="font-body text-sm md:text-base text-[#333333] leading-relaxed">
+                  <button type="button" onClick={() => setIsModalOpen(true)} className="text-[#831a34] underline underline-offset-4 decoration-[#831a34]/50 hover:text-[#630020] hover:decoration-[#630020] transition-colors cursor-pointer font-medium">予約フォーム</button>
+                  <span>から、ご希望の日時をお選びください。</span>
+                </p>
               </article>
 
               <article className="reveal bg-[#FAF5F6] border border-[#ddbfc2]/40 rounded-xl px-6 py-8 md:p-8 text-center">
