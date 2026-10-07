@@ -1040,12 +1040,12 @@ function App() {
       {/* NAVIGATION */}
       <nav id="main-nav" className={`fixed top-0 w-full z-[110] transition-all duration-300 ${isMobileMenuOpen ? "bg-transparent border-transparent shadow-none" : "glass-nav border-b border-[#ddbfc2]/20"}`}>
         <div className="flex justify-between items-center px-6 py-4 md:py-5 max-w-[1200px] mx-auto">
-          <a id="nav-logo" onClick={(e) => handleSmoothScroll(e, '#')} className={`font-heading text-xl md:text-2xl text-[#4A0E0E] font-bold tracking-widest transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-0 md:opacity-100" : "opacity-100"}`} href="#">
+          <a id="nav-logo" onClick={(e) => handleSmoothScroll(e, '#')} className={`font-heading text-xl md:text-2xl text-[#4A0E0E] font-bold tracking-widest transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-0 lg:opacity-100" : "opacity-100"}`} href="#">
             {t.nav.logo}
           </a>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
+          <div className="hidden lg:flex items-center lg:space-x-10">
             <a onClick={(e) => handleSmoothScroll(e, '#concept')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#concept">{t.nav.concept}</a>
             <a onClick={(e) => handleSmoothScroll(e, '#reasons')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#reasons">{t.nav.features}</a>
             <a onClick={(e) => handleSmoothScroll(e, '#trainer')} className="text-[#333333] hover:text-[#831a34] nav-link-hover text-sm font-medium font-body cursor-pointer" href="#trainer">{lang === "ja" ? t.nav.trainer : "Trainer"}</a>
@@ -1056,7 +1056,7 @@ function App() {
 
           <div className="flex items-center space-x-4">
             {/* Language Selector Dropdown (Desktop) */}
-            <div ref={langMenuRef} className="relative hidden md:inline-block">
+            <div ref={langMenuRef} className="relative hidden lg:inline-block">
               <button aria-haspopup="listbox" aria-expanded={isLangMenuOpen} onClick={() => setIsLangMenuOpen(!isLangMenuOpen)} className="flex items-center space-x-1.5 px-3 py-2 rounded-full border border-[#ddbfc2]/40 hover:border-[#831a34]/40 hover:bg-[#831a34]/5 text-stone-700 transition-colors duration-300 text-xs font-semibold cursor-pointer outline-none">
                 <Globe className="w-3.5 h-3.5 text-[#831a34]" />
                 <span>{currentLangName}</span>
@@ -1079,7 +1079,7 @@ function App() {
             </div>
 
             {/* Desktop CTA Button */}
-            <button onClick={() => setIsModalOpen(true)} className="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-[#831a34] text-white rounded-full text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer font-body btn-shine">
+            <button onClick={() => setIsModalOpen(true)} className="hidden lg:inline-flex items-center justify-center px-6 py-2.5 bg-[#831a34] text-white rounded-full text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer font-body btn-shine">
               <span className="btn-shine-content">
                 <CalendarDays className="mr-2 w-4 h-4" />
                 {t.nav.cta}
@@ -1087,7 +1087,7 @@ function App() {
             </button>
 
             {/* Hamburger Button (Mobile) */}
-            <button id="menu-toggle-btn" aria-label="メニュー" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden flex flex-col justify-center items-center w-10 h-10 text-[#630020] z-[103] relative focus:outline-none">
+            <button id="menu-toggle-btn" aria-label="メニュー" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden flex flex-col justify-center items-center w-10 h-10 text-[#630020] z-[103] relative focus:outline-none">
               <div className="w-6 h-5 flex flex-col justify-between items-center relative">
                 <span className={`h-[2px] w-full bg-[#630020] rounded transform transition-all duration-300 origin-center ${isMobileMenuOpen ? "rotate-45 translate-y-[9px]" : ""}`} />
                 <span className={`h-[2px] w-full bg-[#630020] rounded transition-all duration-300 ${isMobileMenuOpen ? "opacity-0 scale-x-0" : ""}`} />
@@ -1099,8 +1099,8 @@ function App() {
       </nav>
 
       {/* MOBILE MENU OVERLAY & DRAW_OUT */}
-      <div id="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)} className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[105] md:hidden transition-opacity duration-300 ease-in-out ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} />
-      <div id="mobile-menu" className={`fixed top-0 right-0 bottom-0 w-[280px] sm:w-[320px] bg-white z-[106] md:hidden flex flex-col items-center justify-start pt-24 px-6 shadow-2xl transition-transform duration-300 ease-in-out pb-[calc(2rem+env(safe-area-inset-bottom))] ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`} style={{ overflowY: "auto" }}>
+      <div id="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)} className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[105] lg:hidden transition-opacity duration-300 ease-in-out ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} />
+      <div id="mobile-menu" className={`fixed top-0 right-0 bottom-0 w-[280px] sm:w-[320px] bg-white z-[106] lg:hidden flex flex-col items-center justify-start pt-24 px-6 shadow-2xl transition-transform duration-300 ease-in-out pb-[calc(2rem+env(safe-area-inset-bottom))] ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`} style={{ overflowY: "auto" }}>
         <div className="flex flex-col space-y-6 text-center w-full shrink-0">
           <a onClick={(e) => handleSmoothScroll(e, '#concept')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#concept">{t.nav.concept}</a>
           <a onClick={(e) => handleSmoothScroll(e, '#reasons')} className="mobile-nav-link text-xl font-heading text-[#4A0E0E] py-2 border-b border-[#ddbfc2]/10 hover:text-[#831a34] transition-colors cursor-pointer" href="#reasons">{t.nav.features}</a>
