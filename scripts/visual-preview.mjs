@@ -504,7 +504,15 @@ async function runYG05LanguageQA(browser) {
             const menu=page.locator('#mobile-menu');
             await menu.waitFor({state:'visible',timeout:6000});
             await menu.getByRole('button',{name:new RegExp(name)}).first().click();
-            await menu.waitFor({state:'hidden',timeout:6000});
+            await page.waitForFunction(() => {
+              const toggle=document.querySelector('#menu-toggle-btn');
+              const panel=document.querySelector('#mobile-menu');
+              return toggle?.getAttribute('aria-expanded')==='false' &&
+                !!panel && panel.getBoundingClientRect().left >= window.innerWidth - 1;
+            },{timeout:6000});
+            const chosen=menu.getByRole('button',{name:new RegExp(name)}).first();
+            const selectedClass=await chosen.getAttribute('class') || '';
+            if(!selectedClass.includes('border-[#831a34]'))throw Error('Selected mobile language not reflected');
           } else {
             await page.locator('#main-nav button[aria-haspopup="listbox"]').click();
             await page.getByRole('listbox').getByRole('option',{name:new RegExp(name)}).click();
