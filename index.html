@@ -772,12 +772,20 @@ function BookingModal({ isOpen, onClose, lang }: { isOpen: boolean, onClose: () 
                             : "bg-white border-[#ddbfc2]/50 hover:border-[#831a34]/60 hover:bg-stone-50 cursor-pointer"
                         }`}
                       >
-                        <div className={`text-xs sm:text-sm font-bold ${isSelected ? "text-white" : "text-[#4A0E0E]"}`}>
+                        <div className={`text-xs sm:text-sm font-bold ${
+                          closed
+                            ? "text-stone-200"
+                            : isSelected
+                            ? "text-white"
+                            : "text-[#4A0E0E]"
+                        }`}>
                           {item.month}/{item.day}
                         </div>
                         <div
                           className={`text-[11px] sm:text-xs font-semibold mt-0.5 ${
-                            isSelected
+                            closed
+                              ? "text-stone-300"
+                              : isSelected
                               ? "text-[#eedbde]"
                               : isSun
                               ? "text-[#b4344d]"
@@ -788,10 +796,19 @@ function BookingModal({ isOpen, onClose, lang }: { isOpen: boolean, onClose: () 
                         >
                           {item.dayName}
                         </div>
+                        {closed && (
+                          <div className="mt-1 text-[10px] sm:text-[11px] font-semibold text-stone-200">
+                            定休日
+                          </div>
+                        )}
                       </button>
                     );
                   })}
                 </div>
+
+                <p className="mt-3 text-center text-xs text-[#695b5e]">
+                  ※毎週月曜日は定休日のため、ご予約いただけません。
+                </p>
 
                 {/* 控えめなモバイル専用スクロールインジケーター (Q1: A) */}
                 <div className="mt-2 sm:hidden flex justify-center items-center" aria-hidden="true">
