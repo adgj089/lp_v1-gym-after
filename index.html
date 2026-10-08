@@ -1470,7 +1470,7 @@ function App() {
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-16 reveal">
             <span className="font-heading text-sm text-[#4A0E0E] mb-4 block uppercase font-bold tracking-wider">{t.faq.badge}</span>
-            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{t.faq.headline}<span className="inline-block">{t.faq.headlineHighlight}</span></h2>
+            <h2 className="font-heading font-bold text-[#4A0E0E] fluid-h2">{t.faq.headline}{" "}<span className="inline-block">{t.faq.headlineHighlight}</span></h2>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-6">
@@ -1507,7 +1507,7 @@ function App() {
         <div className="absolute inset-0 bg-[#831a34]/[0.05]" />
         <div className="max-w-[1200px] mx-auto px-6 text-center relative z-10 reveal">
           <h2 className="font-heading text-headline-xl-mobile md:text-headline-xl font-bold text-[#4A0E0E] mb-8 fluid-h1">
-            {t.finalCta.headline}<span className="inline-block">{t.finalCta.headlineHighlight}</span>
+            {t.finalCta.headline}{" "}<span className="inline-block">{t.finalCta.headlineHighlight}</span>
           </h2>
           <p className="font-body text-lg text-[#333333] max-w-2xl mx-auto mb-12 fluid-body leading-relaxed md:leading-normal">
             <span className="block md:inline" dangerouslySetInnerHTML={{ __html: t.finalCta.body1 }} />
