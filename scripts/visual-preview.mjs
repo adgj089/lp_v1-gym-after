@@ -423,6 +423,8 @@ async function runYG03AdditionalQA(browser) {
           const offenders = [...el.querySelectorAll('*')].filter(node => {
             const r = node.getBoundingClientRect();
             const s = getComputedStyle(node);
+            // Ignore items intentionally clipped by the horizontal date carousel.
+            if (node.closest('.no-scrollbar')) return false;
             return s.position !== 'absolute' && s.position !== 'fixed' &&
               s.overflowX !== 'auto' && s.overflowX !== 'scroll' &&
               r.width > 0 && (r.left < a.left - 2 || r.right > a.right + 2);
