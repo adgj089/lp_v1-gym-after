@@ -171,6 +171,7 @@ for (const profile of profiles) {
 const yg03AdditionalQA = await runYG03AdditionalQA(browser);
 const bookingQA = await runBookingQA(browser);
 
+await runYG05LanguageQA(browser);
 await browser.close();
 
 await fs.writeFile(
@@ -473,4 +474,102 @@ async function runYG03AdditionalQA(browser) {
     await fs.writeFile(path.join(outputDir,'yg03-additional-qa.json'),JSON.stringify(results,null,2));
   }
   return results;
+}
+
+async function runYG05LanguageQA(browser) {
+  const langs = [['ja','日本語'],['en','English'],['zh','简体中文'],['ko','한국어'],['fr','Français'],['es','Español'],['th','ไทย'],['vi','Tiếng Việt']];
+  const viewports = [{name:'desktop',width:1440,height:900,mobile:false},{name:'mobile',width:390,height:844,mobile:true},{name:'mobile-320',width:320,height:720,mobile:true}];
+  const report = {commit:commitSha,profiles:{},summary:{PASS:0,FAIL:0,'NOT TESTED':0}};
+  const ids=['switch','hero','modal','form','demo','overflow','javascript'];
+  for (const viewport of viewports) {
+    report.profiles[viewport.name]={};
+    const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},isMobile:viewport.mobile,hasTouch:viewport.mobile});
+    const page=await context.newPage();
+    let errors=[];
+    page.on('pageerror',e=>errors.push(e.message));
+    try {
+      await page.goto(baseUrl,{waitUntil:'domcontentloaded',timeout:60000});
+      await page.locator('h1').first().waitFor({timeout:30000});
+      for (const [code,name] of langs) {
+        const cases=[];errors=[];
+        const test=async(id,fn)=>{
+          try { const detail=await fn();cases.push({id,status:'PASS',detail:detail||''});report.summary.PASS++;return true; }
+          catch(e){cases.push({id,status:'FAIL',error:String(e.message||e).slice(0,350)});report.summary.FAIL++;return false;}
+        };
+        const skip=(id,reason)=>{cases.push({id,status:'NOT TESTED',reason});report.summary['NOT TESTED']++;};
+        report.profiles[viewport.name][code]=cases;
+        const switched=await test('switch',async()=>{
+          if(viewport.mobile) {
+            await page.locator('#menu-toggle-btn').click();
+            const menu=page.locator('#mobile-menu');
+            await menu.waitFor({state:'visible',timeout:6000});
+            await menu.getByRole('button',{name:new RegExp(name)}).first().click();
+            await menu.waitFor({state:'hidden',timeout:6000});
+          } else {
+            await page.locator('#main-nav button[aria-haspopup="listbox"]').click();
+            await page.getByRole('listbox').getByRole('option',{name:new RegExp(name)}).click();
+            const selected=await page.locator('#main-nav button[aria-haspopup="listbox"]').innerText();
+            if(!selected.includes(name))throw Error('Selected language not reflected');
+          }
+          await page.waitForTimeout(350);
+          return code;
+        });
+        if(!switched) {for(const id of ids.slice(1))skip(id,'Language switch failed');continue;}
+        await test('hero',async()=>{
+          const hero=page.locator('section').filter({has:page.locator('h1')}).first();
+          const txt=await hero.innerText();
+          if(txt.length<30||code!=='ja'&&txt.includes('運動ゼロでも大丈夫'))throw Error('Missing translation or Japanese fallback');
+          return txt.slice(0,120);
+        });
+        const dialog=page.locator('[role="dialog"]');
+        const opened=await test('modal',async()=>{
+          await page.locator('section').filter({has:page.locator('h1')}).first().locator('button').first().click();
+          await dialog.waitFor({state:'visible',timeout:7000});
+          const txt=await dialog.locator('#modal-title').innerText();
+          if(!txt.trim()||code!=='ja'&&txt.includes('無料体験デモ'))throw Error('Modal not translated');
+          return txt;
+        });
+        if(opened) {
+          await test('form',async()=>{
+            await dialog.locator('#modal-name').fill('QA Sample');
+            await dialog.locator('#modal-email').fill('qa@example.com');
+            const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
+            if(await cards.count()!==7)throw Error('Not seven date cards');
+            await cards.first().click();
+            const spans=await dialog.locator('span').allTextContents();
+            const missing=['09:00','10:00','11:00','12:00','13:00','15:00','17:00','19:00'].filter(t=>!spans.includes(t));
+            if(missing.length)throw Error('Missing slots '+missing.join(','));
+            return 'Inputs/date/time';
+          });
+          await test('demo',async()=>{
+            await dialog.locator('#modal-name').fill('QA Sample');
+            await dialog.locator('#modal-email').fill('qa@example.com');
+            await dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/}).first().click();
+            await dialog.locator('button').filter({hasText:/^09:00/}).first().click();
+            await dialog.locator('button[type="submit"]').click();
+            await dialog.getByText('QA Sample',{exact:false}).first().waitFor({timeout:7000});
+            if(!(await dialog.innerText()).includes('09:00'))throw Error('Selected time not present');
+            await page.screenshot({path:path.join(outputDir,'yg05-'+viewport.name+'-'+code+'-success.png'),animations:'disabled'});
+          });
+          await page.screenshot({path:path.join(outputDir,'yg05-'+viewport.name+'-'+code+'-modal.png'),animations:'disabled'});
+          await dialog.locator('button[aria-label="閉じる"]').click();
+          await dialog.waitFor({state:'hidden',timeout:6000});
+        } else {skip('form','Modal did not open');skip('demo','Modal did not open');}
+        await test('overflow',async()=>{
+          const x=await page.evaluate(()=>({w:innerWidth,doc:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)}));
+          if(x.doc>x.w+1)throw Error(JSON.stringify(x));
+          return x;
+        });
+        await test('javascript',async()=>{if(errors.length)throw Error(errors.join(' | '));return 'No pageerror';});
+        await page.screenshot({path:path.join(outputDir,'yg05-'+viewport.name+'-'+code+'-hero.png'),animations:'disabled'});
+      }
+    } catch(e) {
+      report.profiles[viewport.name].setupError=String(e.message||e);
+      for(const [code] of langs)if(!report.profiles[viewport.name][code]){
+        report.profiles[viewport.name][code]=ids.map(id=>{report.summary['NOT TESTED']++;return{id,status:'NOT TESTED',reason:'Profile setup failed'};});
+      }
+    } finally {await context.close();}
+  }
+  await fs.writeFile(path.join(outputDir,'yg05-language-qa.json'),JSON.stringify(report,null,2));
+  return report;
 }
