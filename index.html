@@ -553,7 +553,10 @@ function BookingModal({ isOpen, onClose, lang }: { isOpen: boolean, onClose: () 
     return false;
   };
 
+  const isClosedDay = (dateItem: any) => dateItem?.dayOfWeekIndex === 1;
+
   const handleSelectDate = (item: any) => {
+    if (isClosedDay(item)) return;
     setSelectedDate(item);
     // If the currently selected time is booked on this date, clear time selection
     if (selectedTime && isSlotBooked(item, selectedTime)) {
@@ -752,16 +755,21 @@ function BookingModal({ isOpen, onClose, lang }: { isOpen: boolean, onClose: () 
                     const isSelected = selectedDate?.dateKey === item.dateKey;
                     const isSun = item.dayOfWeekIndex === 0;
                     const isSat = item.dayOfWeekIndex === 6;
+                    const closed = isClosedDay(item);
 
                     return (
                       <button
                         key={item.dateKey}
                         type="button"
                         onClick={() => handleSelectDate(item)}
-                        className={`w-[21.5%] min-w-[64px] sm:w-auto sm:min-w-0 flex-1 shrink-0 snap-start py-2.5 px-1 rounded-xl text-center border transition-all cursor-pointer ${
-                          isSelected
+                        disabled={closed}
+                        aria-disabled={closed}
+                        className={`w-[21.5%] min-w-[64px] sm:w-auto sm:min-w-0 flex-1 shrink-0 snap-start py-2.5 px-1 rounded-xl text-center border transition-all ${
+                          closed
+                            ? "bg-stone-100 border-stone-200 text-stone-400 cursor-not-allowed opacity-70"
+                            : isSelected
                             ? "bg-[#831a34] text-white border-[#831a34] shadow-md ring-2 ring-[#831a34]/25 scale-[1.02]"
-                            : "bg-white border-[#ddbfc2]/50 hover:border-[#831a34]/60 hover:bg-stone-50"
+                            : "bg-white border-[#ddbfc2]/50 hover:border-[#831a34]/60 hover:bg-stone-50 cursor-pointer"
                         }`}
                       >
                         <div className={`text-xs sm:text-sm font-bold ${isSelected ? "text-white" : "text-[#4A0E0E]"}`}>
