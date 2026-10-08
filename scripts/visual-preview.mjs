@@ -172,6 +172,7 @@ const yg03AdditionalQA = await runYG03AdditionalQA(browser);
 const bookingQA = await runBookingQA(browser);
 
 await runYG05LanguageQA(browser);
+await runYG06PrepublishQA(browser);
 await browser.close();
 
 await fs.writeFile(
@@ -580,4 +581,139 @@ async function runYG05LanguageQA(browser) {
   }
   await fs.writeFile(path.join(outputDir,'yg05-language-qa.json'),JSON.stringify(report,null,2));
   return report;
+}
+
+async function runYG06PrepublishQA(browser) {
+  const profiles=[{name:'desktop',width:1440,height:900,mobile:false},{name:'mobile',width:390,height:844,mobile:true},{name:'mobile-320',width:320,height:720,mobile:true}];
+  const result={commit:commitSha,profiles:{},counts:{PASS:0,FAIL:0,'NOT TESTED':0}};
+  for(const profile of profiles) {
+    const context=await browser.newContext({viewport:{width:profile.width,height:profile.height},isMobile:profile.mobile,hasTouch:profile.mobile});
+    const page=await context.newPage();
+    const cases=[];result.profiles[profile.name]=cases;
+    const check=async(id,fn)=>{
+      try{const detail=await fn();cases.push({id,status:'PASS',detail:detail||''});result.counts.PASS++;}
+      catch(e){cases.push({id,status:'FAIL',error:String(e.message||e).slice(0,400)});result.counts.FAIL++;}
+    };
+    const skip=(id,why)=>{cases.push({id,status:'NOT TESTED',reason:why});result.counts['NOT TESTED']++;};
+    const dialog=page.locator('[role="dialog"]');
+    const close=async()=>{await dialog.locator('button[aria-label="閉じる"]').click();await dialog.waitFor({state:'hidden',timeout:6000});};
+    try {
+      await page.goto(baseUrl,{waitUntil:'domcontentloaded',timeout:60000});
+      await page.locator('h1').first().waitFor({timeout:30000});
+      const ctas=[
+        ['C01-hero',()=>page.locator('section').filter({has:page.locator('h1')}).first().locator('button').first()],
+        ['C02-header',()=>profile.mobile?page.locator('#mobile-menu button').filter({hasText:'無料体験'}).first():page.locator('#main-nav button').filter({hasText:'無料体験'}).first()],
+        ['C03-standard',()=>page.locator('#pricing button').nth(0)],
+        ['C03-free',()=>page.locator('#pricing button').nth(1)],
+        ['C03-premium',()=>page.locator('#pricing button').nth(2)],
+        ['C04-final',()=>page.locator('section').filter({has:page.locator('h2')}).locator('button').filter({hasText:'無料体験を予約'}).last()],
+        ['C05-trialflow',()=>page.locator('#trial-flow button').first()]
+      ];
+      for(const [id,locator] of ctas)await check(id,async()=>{
+        if(id==='C02-header'&&profile.mobile){await page.locator('#menu-toggle-btn').click();await page.locator('#menu-toggle-btn').getAttribute('aria-expanded').then(v=>{if(v!=='true')throw Error('Mobile menu not open');});}
+        await locator().click({timeout:10000});
+        await dialog.waitFor({state:'visible',timeout:6000});
+        await close();
+      });
+      const nav=['concept','reasons','trainer','pricing','faq','access'];
+      for(const dest of nav)await check('N01-'+dest,async()=>{
+        if(profile.mobile)await page.locator('#menu-toggle-btn').click();
+        const root=profile.mobile?page.locator('#mobile-menu'):page.locator('#main-nav');
+        await root.locator('a[href="#'+dest+'"]').first().click({timeout:10000});
+        const target=page.locator('#'+dest);
+        await target.waitFor({state:'attached',timeout:6000});
+        await page.waitForTimeout(850);
+        if(profile.mobile && await page.locator('#menu-toggle-btn').getAttribute('aria-expanded')!=='false')throw Error('Mobile navigation menu remains expanded');
+        const bounds=await target.boundingBox();
+        if(!bounds||bounds.y>profile.height+150||bounds.y+bounds.height<0)throw Error('Navigation did not bring section into view');
+      });
+      if(profile.mobile) await check('N02-menu-close',async()=>{
+        await page.locator('#menu-toggle-btn').click();
+        if(await page.locator('#menu-toggle-btn').getAttribute('aria-expanded')!=='true')throw Error('Open failed');
+        await page.locator('#menu-toggle-btn').click();
+        if(await page.locator('#menu-toggle-btn').getAttribute('aria-expanded')!=='false')throw Error('Close failed');
+      }); else skip('N02-menu-close','Mobile-only feature');
+      await check('F01-faq',async()=>{
+        const buttons=page.locator('#faq .faq-toggle');
+        if(await buttons.count()!==7)throw Error('Expected 7 FAQ entries');
+        for(let i=0;i<7;i++){
+          const b=buttons.nth(i);
+          await b.click();
+          if(await b.getAttribute('aria-expanded')!=='true')throw Error('FAQ '+i+' did not expand');
+          await b.click();
+          if(await b.getAttribute('aria-expanded')!=='false')throw Error('FAQ '+i+' did not collapse');
+        }
+        return '7 FAQ open-close cycles';
+      });
+      await check('D01-monday-closed',async()=>{
+        await page.locator('section').filter({has:page.locator('h1')}).first().locator('button').first().click();
+        await dialog.waitFor({state:'visible',timeout:6000});
+        for(let week=0;week<2;week++){
+          const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
+          for(let i=0;i<await cards.count();i++){
+            const card=cards.nth(i);
+            const label=await card.innerText();
+            if(!label.includes('月'))continue;
+            if(await card.isEnabled())throw Error('Monday selectable: '+label.replace(/\n/g,' '));
+          }
+          if(week===0)await dialog.getByRole('button',{name:'次の7日'}).click();
+        }
+        return 'Mondays blocked';
+      });
+      await check('D02-time-options',async()=>{
+        const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
+        await cards.first().click();
+        const spans=await dialog.locator('span').allTextContents();
+        const expected=['09:00','10:00','11:00','12:00','13:00','15:00','17:00','19:00'];
+        const missing=expected.filter(t=>!spans.includes(t));
+        if(missing.length)throw Error('Missing '+missing.join(','));
+        return '8 time slots';
+      });
+      await check('D03-week-navigation',async()=>{
+        const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
+        const first=await cards.first().innerText();
+        await dialog.getByRole('button',{name:'前の7日'}).click();
+        if(await cards.first().innerText()===first)throw Error('Previous week not working');
+        await dialog.getByRole('button',{name:'次の7日'}).click();
+        if(await cards.first().innerText()!==first)throw Error('Week not restored');
+      });
+      await check('D04-date-change',async()=>{
+        const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
+        await cards.first().click();
+        const slots=dialog.locator('button').filter({hasText:/^09:00/});
+        await slots.first().click();
+        await cards.nth(1).click();
+        if(await cards.count()!==7)throw Error('Cards disappeared');
+        return 'Date changed';
+      });
+      await check('D05-booked-disabled',async()=>{
+        const booked=dialog.locator('[title]').filter({hasText:'満席'});
+        if(await booked.count()===0)throw Error('No booked slot found');
+        if(await booked.first().evaluate(el=>el.tagName.toLowerCase())==='button')throw Error('Booked slot clickable');
+      });
+      await check('D06-demo',async()=>{
+        await dialog.locator('#modal-name').fill('YG06 QA');
+        await dialog.locator('#modal-email').fill('qa@example.com');
+        await dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/}).first().click();
+        await dialog.locator('button').filter({hasText:/^09:00/}).first().click();
+        await dialog.locator('button[type="submit"]').click();
+        await dialog.getByText('YG06 QA',{exact:false}).first().waitFor({timeout:6500});
+        return 'Demo completion observed';
+      });
+      await check('D07-demo-notice',async()=>{
+        const text=await dialog.innerText();
+        if(!text.includes('送信・保存されていません'))throw Error('Demo success disclaimer missing');
+      });
+      await page.screenshot({path:path.join(outputDir,'yg06-'+profile.name+'-booking.png'),animations:'disabled'});
+      await close();
+    }catch(e){
+      const why=String(e.message||e);
+      cases.push({id:'SETUP',status:'FAIL',error:why.slice(0,450)});result.counts.FAIL++;
+      for(const id of ['C01-hero','C02-header','C03-standard','C03-free','C03-premium','C04-final','C05-trialflow',...['concept','reasons','trainer','pricing','faq','access'].map(x=>'N01-'+x),'N02-menu-close','F01-faq','D01-monday-closed','D02-time-options','D03-week-navigation','D04-date-change','D05-booked-disabled','D06-demo','D07-demo-notice']){
+        if(!cases.some(c=>c.id===id))skip(id,'Setup interrupted: '+why.slice(0,120));
+      }
+    }finally{await context.close();}
+  }
+  await fs.writeFile(path.join(outputDir,'yg06-prepublish-qa.json'),JSON.stringify(result,null,2));
+  return result;
 }
