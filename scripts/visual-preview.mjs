@@ -213,7 +213,7 @@ async function runBookingQA(browser) {
     const dialog = page.locator('[role="dialog"]');
     const isOpen = async () => (await dialog.count()) > 0 && await dialog.isVisible();
     const open = async () => {
-      await page.locator('button').filter({ hasText: '無料体験を予約' }).first().click();
+      await page.locator('button:visible').filter({ hasText: '無料体験を予約' }).first().click({ timeout: 10000 });
       await dialog.waitFor({ state: 'visible', timeout: 10000 });
     };
     try {
@@ -337,6 +337,10 @@ async function runBookingQA(browser) {
     } catch (error) {
       cases.push({ id: 'SETUP', status: 'FAIL', error: String(error.message || error).slice(0, 600) });
       results.failed++;
+      const expected = ['B01-open','B02-close','B03-input','B04-dates','B05-week-navigation','B06-horizontal-date-scroll','B07-time-slots','B08-booked-disabled','B09-date-change-clears-booked','B10-required-fields','B11-email-validation','B12-demo-success','B13-reset','B14-modal-scroll','B15-modal-bounds'];
+      for (const id of expected) {
+        if (!cases.some((item) => item.id === id)) cases.push({ id, status: 'NOT TESTED', reason: 'Setup failed before this case could run' });
+      }
     } finally {
       results.profiles[profile.name] = cases;
       await context.close();
