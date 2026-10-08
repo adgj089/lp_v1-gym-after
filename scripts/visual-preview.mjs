@@ -10,6 +10,7 @@ const profiles = [
   { name: 'desktop', width: 1440, height: 900, isMobile: false },
   { name: 'tablet', width: 768, height: 1024, isMobile: false },
   { name: 'mobile', width: 390, height: 844, isMobile: true },
+  { name: 'mobile-320', width: 320, height: 720, isMobile: true },
 ];
 
 await fs.mkdir(outputDir, { recursive: true });
@@ -132,6 +133,18 @@ for (const profile of profiles) {
     animations: 'disabled',
   });
 
+  // Trigger scroll-based reveal effects before capturing the full page.
+  const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+  const scrollStep = Math.max(200, Math.floor(profile.height * 0.75));
+  for (let y = 0; y < pageHeight; y += scrollStep) {
+    await page.evaluate((position) => window.scrollTo(0, position), y);
+    await page.waitForTimeout(160);
+  }
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(750);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(450);
+
   await page.screenshot({
     path: path.join(outputDir, `${profile.name}-full.png`),
     fullPage: true,
@@ -192,7 +205,7 @@ console.log('Visual preview generated successfully.');
 
 async function runBookingQA(browser) {
   const results = { commit: commitSha, generatedAt: new Date().toISOString(), profiles: {}, passed: 0, failed: 0 };
-  for (const profile of profiles.filter((p) => p.name !== 'tablet')) {
+  for (const profile of profiles.filter((p) => p.name === 'desktop' || p.name === 'mobile')) {
     const context = await browser.newContext({
       viewport: { width: profile.width, height: profile.height },
       screen: { width: profile.width, height: profile.height },
