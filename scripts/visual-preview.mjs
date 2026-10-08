@@ -671,11 +671,15 @@ async function runYG06PrepublishQA(browser) {
       });
       await check('D03-week-navigation',async()=>{
         const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
-        const first=await cards.first().innerText();
-        await dialog.getByRole('button',{name:'前の7日'}).click();
-        if(await cards.first().innerText()===first)throw Error('Previous week not working');
-        await dialog.getByRole('button',{name:'次の7日'}).click();
-        if(await cards.first().innerText()!==first)throw Error('Week not restored');
+        const initial=await cards.first().innerText();
+        const nextWeek=dialog.getByRole('button',{name:'次の7日'});
+        const previousWeek=dialog.getByRole('button',{name:'前の7日'});
+        if(!await nextWeek.isEnabled())throw Error('Next week is disabled');
+        await nextWeek.click();
+        if(await cards.first().innerText()===initial)throw Error('Next week not working');
+        if(!await previousWeek.isEnabled())throw Error('Previous week is disabled after advancing');
+        await previousWeek.click();
+        if(await cards.first().innerText()!==initial)throw Error('Week not restored');
       });
       await check('D04-date-change',async()=>{
         const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
