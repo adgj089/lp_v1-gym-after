@@ -213,7 +213,7 @@ async function runBookingQA(browser) {
     const dialog = page.locator('[role="dialog"]');
     const isOpen = async () => (await dialog.count()) > 0 && await dialog.isVisible();
     const open = async () => {
-      await page.locator('button:visible').filter({ hasText: '無料体験を予約' }).first().click({ timeout: 10000 });
+      await page.locator('section').filter({ has: page.locator('h1') }).locator('button').filter({ hasText: '無料体験を予約' }).first().click({ timeout: 10000 });
       await dialog.waitFor({ state: 'visible', timeout: 10000 });
     };
     try {
