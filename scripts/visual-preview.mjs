@@ -168,6 +168,7 @@ for (const profile of profiles) {
   await context.close();
 }
 
+const yg03AdditionalQA = await runYG03AdditionalQA(browser);
 const bookingQA = await runBookingQA(browser);
 
 await browser.close();
@@ -360,5 +361,114 @@ async function runBookingQA(browser) {
     }
   }
   await fs.writeFile(path.join(outputDir, 'booking-qa.json'), JSON.stringify(results, null, 2));
+  return results;
+}
+
+
+async function runYG03AdditionalQA(browser) {
+  const results = { commit: commitSha, map: {}, mobile320: { cases: [] } };
+  const context = await browser.newContext({
+    viewport: { width: 320, height: 720 }, screen: { width: 320, height: 720 },
+    isMobile: true, hasTouch: true, deviceScaleFactor: 1,
+  });
+  const page = await context.newPage();
+  const check = async (id, test) => {
+    try {
+      const details = await test();
+      results.mobile320.cases.push({ id, status: 'PASS', details: details || null });
+    } catch (error) {
+      results.mobile320.cases.push({ id, status: 'FAIL', error: String(error.message || error).slice(0, 500) });
+    }
+  };
+  try {
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.getByRole('heading', { level: 1 }).waitFor({ timeout: 30000 });
+    const frame = page.locator('#access iframe[title="Y_Gym Ebisu Area Map"]');
+    results.map.exists = (await frame.count()) === 1;
+    if (results.map.exists) {
+      results.map.source = await frame.getAttribute('src');
+      await frame.scrollIntoViewIfNeeded();
+      const box = await frame.boundingBox();
+      results.map.bounds = box;
+      results.map.validBounds = !!box && box.width > 200 && box.height > 200 && box.x >= -1 && box.x + box.width <= 321;
+      results.map.loadEvent = 'NOT VERIFIED';
+      try {
+        await frame.evaluate((el) => new Promise((resolve, reject) => {
+          if (el.contentDocument?.readyState === 'complete') return resolve(true);
+          const timer = setTimeout(() => reject(Error('iframe load timeout')), 10000);
+          el.addEventListener('load', () => { clearTimeout(timer); resolve(true); }, { once: true });
+        }));
+        results.map.loadEvent = 'OBSERVED';
+      } catch (error) {
+        results.map.loadEvent = 'NOT VERIFIED: ' + String(error.message || error);
+      }
+      await page.locator('#access').screenshot({ path: path.join(outputDir, 'access-map-mobile-320.png'), animations: 'disabled' });
+      results.map.visualRendering = 'REQUIRES VISUAL REVIEW';
+    }
+    const dialog = page.locator('[role="dialog"]');
+    await check('M320-01', async () => {
+      await page.locator('section').filter({ has: page.locator('h1') }).locator('button').filter({ hasText: '無料体験を予約' }).first().click();
+      await dialog.waitFor({ state: 'visible', timeout: 10000 });
+    });
+    if (await dialog.isVisible()) {
+      await page.waitForTimeout(600);
+      await check('M320-02', async () => {
+        const box = await dialog.boundingBox();
+        if (!box || box.x < -1 || box.x + box.width > 321) throw Error('Dialog outside 320px viewport');
+        return box;
+      });
+      await check('M320-03', async () => {
+        const data = await dialog.evaluate(el => {
+          const a = el.getBoundingClientRect();
+          const offenders = [...el.querySelectorAll('*')].filter(node => {
+            const r = node.getBoundingClientRect();
+            const s = getComputedStyle(node);
+            return s.position !== 'absolute' && s.position !== 'fixed' &&
+              s.overflowX !== 'auto' && s.overflowX !== 'scroll' &&
+              r.width > 0 && (r.left < a.left - 2 || r.right > a.right + 2);
+          }).slice(0, 8).map(n => ({tag:n.tagName, className:typeof n.className==='string'?n.className.slice(0,80):''}));
+          return { offenders, dialogWidth: a.width };
+        });
+        if (data.offenders.length) throw Error('Possible overflow: ' + JSON.stringify(data.offenders));
+        return data;
+      });
+      await page.screenshot({path:path.join(outputDir,'booking-mobile-320.png'),animations:'disabled'});
+      await check('M320-04', async () => {
+        const el = dialog.locator('.no-scrollbar').first();
+        const metrics = await el.evaluate(e=>({scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}));
+        if (metrics.scrollWidth <= metrics.clientWidth) throw Error('Date row cannot scroll');
+        await el.evaluate(e=>{e.scrollLeft=e.scrollWidth});
+        if (await el.evaluate(e=>e.scrollLeft) <= 0) throw Error('Scroll position unchanged');
+        return metrics;
+      });
+      await check('M320-05', async () => {
+        const cards = dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
+        await cards.first().click();
+        const spans = await dialog.locator('span').allTextContents();
+        const slots = ['09:00','10:00','11:00','12:00','13:00','15:00','17:00','19:00'];
+        const missing = slots.filter(t=>!spans.includes(t));
+        if(missing.length) throw Error('Missing time slots: '+missing.join(','));
+        return slots;
+      });
+      await check('M320-06', async () => {
+        const scroller = dialog.locator('.overflow-y-auto').first();
+        const size = await scroller.evaluate(e=>({scrollHeight:e.scrollHeight,clientHeight:e.clientHeight}));
+        if(size.scrollHeight <= size.clientHeight) throw Error('Expected vertical scrolling at 320px');
+        await scroller.evaluate(e=>{e.scrollTop=e.scrollHeight});
+        if(await scroller.evaluate(e=>e.scrollTop)<=0) throw Error('Vertical scrolling failed');
+        return size;
+      });
+      await page.screenshot({path:path.join(outputDir,'booking-mobile-320-scrolled.png'),animations:'disabled'});
+      await check('M320-07', async () => {
+        await dialog.locator('button[aria-label="閉じる"]').click();
+        await dialog.waitFor({state:'hidden',timeout:6000});
+      });
+    } else {
+      for (let i=2;i<=7;i++) results.mobile320.cases.push({id:'M320-0'+i,status:'NOT TESTED',reason:'Dialog did not open'});
+    }
+  } finally {
+    await context.close();
+    await fs.writeFile(path.join(outputDir,'yg03-additional-qa.json'),JSON.stringify(results,null,2));
+  }
   return results;
 }
