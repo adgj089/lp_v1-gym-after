@@ -285,30 +285,35 @@ async function runBookingQA(browser) {
         if (await booked.first().evaluate((el) => el.tagName.toLowerCase()) === 'button') throw Error('Booked item is clickable');
       });
       await check('B09-date-change-clears-booked', async () => {
-        // Choose an available time on one date that is booked on another date.
-        const tomorrowCards = cards;
+        // A closed day cannot be selected. Only use enabled source/target dates.
+        const dateCards = cards;
+        const submit = dialog.locator('button[type="submit"]');
         let tested = false;
         for (let i = 0; i < 7 && !tested; i++) {
-          await tomorrowCards.nth(i).click();
+          if (!await dateCards.nth(i).isEnabled()) continue;
+          await dateCards.nth(i).click();
           for (const time of ['11:00','17:00','15:00','10:00']) {
             const option = dialog.locator('button').filter({ hasText: new RegExp('^' + time) }).first();
-            if (!await option.count()) continue;
+            if (!await option.count() || !await option.isEnabled()) continue;
             await option.click();
+            if (!await submit.isEnabled()) throw Error('Available date/time did not enable submission');
             for (let j = 0; j < 7; j++) {
-              if (i === j) continue;
-              await tomorrowCards.nth(j).click();
+              if (i === j || !await dateCards.nth(j).isEnabled()) continue;
+              await dateCards.nth(j).click();
               const booked = dialog.locator('[title]').filter({ hasText: time });
               if (await booked.count()) {
                 const picked = await dialog.locator('button').filter({ hasText: new RegExp('^' + time) }).count();
                 if (picked) throw Error('Booked time remains selectable');
-                tested = true; break;
+                if (await submit.isEnabled()) throw Error('Previously selected booked time was not cleared');
+                tested = true;
+                break;
               }
             }
             if (tested) break;
-            await tomorrowCards.nth(i).click();
+            await dateCards.nth(i).click();
           }
         }
-        if (!tested) throw Error('Could not reach transition case');
+        if (!tested) throw Error('Could not reach transition case using available dates');
       });
       await check('B10-required-fields', async () => {
         await dialog.locator('#modal-name').fill('');
