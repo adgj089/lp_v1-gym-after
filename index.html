@@ -421,7 +421,7 @@ import {
 
 
 // --- SCROLL TO TOP BUTTON COMPONENT ---
-function ScrollToTopButton() {
+function ScrollToTopButton({ isMobileMenuOpen }: { isMobileMenuOpen: boolean }) {
   const [show, setShow] = useState(false);
   const [isNearBottom, setIsNearBottom] = useState(false);
 
@@ -453,7 +453,7 @@ function ScrollToTopButton() {
     <button
       onClick={scrollToTop}
       className={`fixed right-6 md:right-10 z-[120] w-12 h-12 md:w-14 md:h-14 bg-white/70 backdrop-blur-md text-[#831a34] rounded-full shadow-[0_4px_24px_rgba(131,26,52,0.12)] border border-[#ddbfc2]/50 flex items-center justify-center group overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#831a34]/30 cursor-pointer transition-all duration-500 ease-out ${
-        show ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
+        show && !isMobileMenuOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
       }`}
       style={{ bottom: isNearBottom ? "80px" : "32px" }}
       aria-label="トップに戻る"
@@ -1572,7 +1572,7 @@ function App() {
       </footer>
 
       {/* Scroll To Top */}
-      <ScrollToTopButton />
+      <ScrollToTopButton isMobileMenuOpen={isMobileMenuOpen} />
 
       {/* Booking Modal */}
       <BookingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} lang={lang} />
