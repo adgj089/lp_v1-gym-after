@@ -555,6 +555,9 @@ async function runYG05LanguageQA(browser) {
             if(missing.length)throw Error('Missing slots '+missing.join(','));
             return 'Inputs/date/time';
           });
+          if(['en','zh','ko'].includes(code)) {
+            await page.screenshot({path:path.join(outputDir,'yg05-'+viewport.name+'-'+code+'-form.png'),animations:'disabled'});
+          }
           await test('demo',async()=>{
             await dialog.locator('#modal-name').fill('QA Sample');
             await dialog.locator('#modal-email').fill('qa@example.com');
