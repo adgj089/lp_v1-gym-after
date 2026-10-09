@@ -174,6 +174,7 @@ const bookingQA = await runBookingQA(browser);
 await runYG05LanguageQA(browser);
 await runYG06PrepublishQA(browser);
 await runYGStep3OverlayQA(browser);
+await runLP002HeaderCapture(browser);
 await browser.close();
 
 await fs.writeFile(
@@ -784,4 +785,42 @@ async function runYGStep3OverlayQA(browser) {
   }
   await fs.writeFile(path.join(outputDir, 'yg-step3-overlay-qa.json'), JSON.stringify(report, null, 2));
   return report;
+}
+
+async function runLP002HeaderCapture(browser) {
+  const result = { commit: commitSha, profiles: {} };
+  for (const width of [1024, 1280]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
+    const page = await context.newPage();
+    try {
+      await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 60000 });
+      await page.locator('#nav-logo').waitFor({ state: 'visible', timeout: 30000 });
+      await page.evaluate(async () => { if (document.fonts?.ready) await document.fonts.ready; });
+      await page.waitForTimeout(450);
+      const info = await page.evaluate(() => {
+        const nav = document.querySelector('#main-nav');
+        const logo = document.querySelector('#nav-logo');
+        const navItems = document.querySelector('#main-nav .hidden.lg\\:flex');
+        const selector = document.querySelector('#main-nav [aria-haspopup="listbox"]');
+        const cta = [...document.querySelectorAll('#main-nav button')].find(el => el.textContent.includes('無料体験'));
+        const rect = el => { if (!el) return null; const r = el.getBoundingClientRect(); return { x: +r.x.toFixed(1), y: +r.y.toFixed(1), width: +r.width.toFixed(1), height: +r.height.toFixed(1), right: +r.right.toFixed(1), bottom: +r.bottom.toFixed(1) }; };
+        const logoStyle = getComputedStyle(logo);
+        const logoRect = logo.getBoundingClientRect();
+        const lineHeight = parseFloat(logoStyle.lineHeight) || parseFloat(logoStyle.fontSize) * 1.2;
+        return { viewportWidth: innerWidth, scrollWidth: document.documentElement.scrollWidth,
+          logo: { text: logo.textContent.trim(), rect: rect(logo), fontSize: logoStyle.fontSize,
+            lineHeight: logoStyle.lineHeight, whiteSpace: logoStyle.whiteSpace,
+            estimatedWrapped: logoRect.height > lineHeight * 1.45 },
+          nav: rect(nav), navItems: rect(navItems), language: rect(selector),
+          cta: rect(cta), menuToggle: rect(document.querySelector('#menu-toggle-btn')),
+          possibleCollision: !!(navItems && logoRect.right > navItems.getBoundingClientRect().left + 1),
+          javascriptErrors: [] };
+      });
+      await page.screenshot({ path: path.join(outputDir, 'lp002-header-' + width + '.png'), animations: 'disabled' });
+      result.profiles[width] = info;
+    } catch (error) { result.profiles[width] = { error: String(error.message || error).slice(0, 500) }; }
+    finally { await context.close(); }
+  }
+  await fs.writeFile(path.join(outputDir, 'lp002-header-diagnostics.json'), JSON.stringify(result, null, 2));
+  return result;
 }
