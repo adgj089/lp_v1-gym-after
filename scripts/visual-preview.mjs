@@ -788,8 +788,8 @@ async function runYGStep3OverlayQA(browser) {
 }
 
 async function runLP002HeaderCapture(browser) {
-  const result = { commit: commitSha, profiles: {} };
-  for (const width of [1024, 1280]) {
+  const result = { commit: commitSha, profiles: {}, summary: { PASS: 0, FAIL: 0 } };
+  for (const width of [1023, 1024, 1279, 1280]) {
     const context = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
     const page = await context.newPage();
     try {
@@ -800,26 +800,46 @@ async function runLP002HeaderCapture(browser) {
       const info = await page.evaluate(() => {
         const nav = document.querySelector('#main-nav');
         const logo = document.querySelector('#nav-logo');
-        const navItems = document.querySelector('#main-nav .hidden.lg\\:flex');
-        const selector = document.querySelector('#main-nav [aria-haspopup="listbox"]');
+        const navItems = document.querySelector('#main-nav .hidden.xl\\:flex');
+        const language = document.querySelector('#main-nav [aria-haspopup="listbox"]');
         const cta = [...document.querySelectorAll('#main-nav button')].find(el => el.textContent.includes('無料体験'));
+        const toggle = document.querySelector('#menu-toggle-btn');
         const rect = el => { if (!el) return null; const r = el.getBoundingClientRect(); return { x: +r.x.toFixed(1), y: +r.y.toFixed(1), width: +r.width.toFixed(1), height: +r.height.toFixed(1), right: +r.right.toFixed(1), bottom: +r.bottom.toFixed(1) }; };
+        const visible = el => !!el && getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().width > 0;
         const logoStyle = getComputedStyle(logo);
         const logoRect = logo.getBoundingClientRect();
         const lineHeight = parseFloat(logoStyle.lineHeight) || parseFloat(logoStyle.fontSize) * 1.2;
+        const expectedDesktop = innerWidth >= 1280;
+        const desktopVisible = visible(navItems);
+        const hamburgerVisible = visible(toggle);
+        const logoWrapped = logoRect.height > lineHeight * 1.45;
+        const collision = desktopVisible && logoRect.right > navItems.getBoundingClientRect().left + 1;
         return { viewportWidth: innerWidth, scrollWidth: document.documentElement.scrollWidth,
-          logo: { text: logo.textContent.trim(), rect: rect(logo), fontSize: logoStyle.fontSize,
-            lineHeight: logoStyle.lineHeight, whiteSpace: logoStyle.whiteSpace,
-            estimatedWrapped: logoRect.height > lineHeight * 1.45 },
-          nav: rect(nav), navItems: rect(navItems), language: rect(selector),
-          cta: rect(cta), menuToggle: rect(document.querySelector('#menu-toggle-btn')),
-          possibleCollision: !!(navItems && logoRect.right > navItems.getBoundingClientRect().left + 1),
-          javascriptErrors: [] };
+          logo: { text: logo.textContent.trim(), rect: rect(logo), lineHeight: logoStyle.lineHeight, wrapped: logoWrapped },
+          nav: rect(nav), navItems: rect(navItems), language: rect(language), cta: rect(cta), menuToggle: rect(toggle),
+          desktopVisible, hamburgerVisible, expectedDesktop, collision,
+          correctMode: desktopVisible === expectedDesktop && hamburgerVisible !== expectedDesktop,
+          horizontalOverflow: document.documentElement.scrollWidth > innerWidth + 1 };
       });
+      let menuInteraction = null;
+      if (width < 1280) {
+        await page.locator('#menu-toggle-btn').click();
+        const opened = await page.locator('#menu-toggle-btn').getAttribute('aria-expanded') === 'true';
+        const menu = page.locator('#mobile-menu');
+        const menuVisible = await menu.isVisible();
+        await menu.locator('a[href="#concept"]').click({ timeout: 6000 });
+        const closed = await page.locator('#menu-toggle-btn').getAttribute('aria-expanded') === 'false';
+        menuInteraction = { opened, menuVisible, closed };
+      }
       await page.screenshot({ path: path.join(outputDir, 'lp002-header-' + width + '.png'), animations: 'disabled' });
-      result.profiles[width] = info;
-    } catch (error) { result.profiles[width] = { error: String(error.message || error).slice(0, 500) }; }
-    finally { await context.close(); }
+      const pass = info.correctMode && !info.horizontalOverflow && !info.collision && !info.logo.wrapped &&
+        (menuInteraction === null || Object.values(menuInteraction).every(Boolean));
+      result.profiles[width] = { status: pass ? 'PASS' : 'FAIL', ...info, menuInteraction };
+      result.summary[pass ? 'PASS' : 'FAIL']++;
+    } catch (error) {
+      result.profiles[width] = { status: 'FAIL', error: String(error.message || error).slice(0, 500) };
+      result.summary.FAIL++;
+    } finally { await context.close(); }
   }
   await fs.writeFile(path.join(outputDir, 'lp002-header-diagnostics.json'), JSON.stringify(result, null, 2));
   return result;
