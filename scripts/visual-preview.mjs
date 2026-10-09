@@ -744,46 +744,42 @@ async function runYGStep3OverlayQA(browser) {
       await page.locator('#menu-toggle-btn').waitFor({ state: 'visible', timeout: 30000 });
       await page.evaluate(() => window.scrollTo(0, Math.min(900, document.documentElement.scrollHeight / 2)));
       await page.waitForTimeout(700);
-      const back = page.getByRole('button', { name: 'トップに戻る' });
-      if (!(await back.isVisible())) throw Error('Back-to-top button did not become visible');
-      await page.locator('#menu-toggle-btn').click();
-      await page.waitForTimeout(500);
-      if (await page.locator('#menu-toggle-btn').getAttribute('aria-expanded') !== 'true') throw Error('Mobile menu did not open');
-      const evidence = await page.evaluate(() => {
-        const back = document.querySelector('button[aria-label="トップに戻る"]');
-        const menu = document.querySelector('#mobile-menu');
-        const items = [...menu.querySelectorAll('a, button')].filter(el => {
-          const r = el.getBoundingClientRect();
-          return r.width && r.height && r.bottom > 0 && r.top < innerHeight;
-        });
-        const b = back.getBoundingClientRect();
-        const m = menu.getBoundingClientRect();
-        const overlaps = items.map(el => {
-          const r = el.getBoundingClientRect();
-          const left = Math.max(r.left, b.left), right = Math.min(r.right, b.right);
-          const top = Math.max(r.top, b.top), bottom = Math.min(r.bottom, b.bottom);
-          const intersects = right > left && bottom > top;
-          const x = Math.max(0, Math.min(innerWidth - 1, (left + right) / 2));
-          const y = Math.max(0, Math.min(innerHeight - 1, (top + bottom) / 2));
-          const front = intersects ? document.elementFromPoint(x, y) : null;
-          return { label: el.textContent.trim().slice(0, 40), intersects,
-            blocked: intersects && front && !el.contains(front) && front !== el,
-            frontTag: front?.tagName || null, frontLabel: front?.getAttribute('aria-label') || '' };
-        });
-        return { backVisible: getComputedStyle(back).pointerEvents !== 'none' && getComputedStyle(back).opacity !== '0',
-          menuZ: getComputedStyle(menu).zIndex, backZ: getComputedStyle(back).zIndex,
-          menuBounds: { left: m.left, right: m.right }, backBounds: { left: b.left, right: b.right, top: b.top, bottom: b.bottom },
-          items: overlaps, anyBlocked: overlaps.some(x => x.blocked) };
+      const back = page.locator('button[aria-label="トップに戻る"]');
+      const state = async () => back.evaluate(el => {
+        const css = getComputedStyle(el);
+        return { opacity: Number(css.opacity), pointerEvents: css.pointerEvents,
+          bounds: { x: el.getBoundingClientRect().x, y: el.getBoundingClientRect().y } };
       });
+      const before = await state();
+      if (before.opacity < 0.95 || before.pointerEvents !== 'auto')
+        throw Error('Back-to-top not active before opening menu: ' + JSON.stringify(before));
+
+      await page.locator('#menu-toggle-btn').click();
+      await page.waitForTimeout(650);
+      if (await page.locator('#menu-toggle-btn').getAttribute('aria-expanded') !== 'true')
+        throw Error('Mobile menu did not open');
+      const opened = await state();
+      if (opened.opacity > 0.05 || opened.pointerEvents !== 'none')
+        throw Error('Back-to-top remains interactive while mobile menu open: ' + JSON.stringify(opened));
       await page.screenshot({ path: path.join(outputDir, 'yg-step3-' + profile.name + '-menu-open.png'), animations: 'disabled' });
-      const test = evidence.anyBlocked
-        ? { status: 'FAIL', reason: 'Back-to-top button obstructs a visible menu item' }
-        : { status: 'PASS', reason: 'No visible menu item obstructed at this viewport and scroll position' };
-      report.profiles[profile.name] = { ...test, evidence };
-      report.summary[test.status]++;
+
+      const menuLink = page.locator('#mobile-menu a[href="#concept"]');
+      await menuLink.click({ timeout: 6000 });
+      await page.waitForTimeout(750);
+      if (await page.locator('#menu-toggle-btn').getAttribute('aria-expanded') !== 'false')
+        throw Error('Mobile navigation did not close menu');
+      const after = await state();
+      if (after.opacity < 0.95 || after.pointerEvents !== 'auto')
+        throw Error('Back-to-top did not recover after menu close: ' + JSON.stringify(after));
+
+      await back.click({ timeout: 6000 });
+      await page.waitForFunction(() => window.scrollY < 35, { timeout: 7000 });
+      report.profiles[profile.name] = { status: 'PASS', before, opened, after,
+        reason: 'Hidden and non-interactive during menu; restored after menu link; returns to top' };
+      report.summary.PASS++;
     } catch (error) {
-      report.profiles[profile.name] = { status: 'NOT TESTED', reason: String(error.message || error).slice(0, 500) };
-      report.summary['NOT TESTED']++;
+      report.profiles[profile.name] = { status: 'FAIL', reason: String(error.message || error).slice(0, 700) };
+      report.summary.FAIL++;
     } finally { await context.close(); }
   }
   await fs.writeFile(path.join(outputDir, 'yg-step3-overlay-qa.json'), JSON.stringify(report, null, 2));
