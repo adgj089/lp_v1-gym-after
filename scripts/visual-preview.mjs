@@ -208,6 +208,19 @@ await fs.writeFile(
 console.log('Visual preview generated successfully.');
 
 
+// Select a genuinely bookable date; closed days must remain disabled.
+async function selectAvailableDate(cards, excludeIndex = -1) {
+  const count = await cards.count();
+  for (let i = 0; i < count; i++) {
+    if (i === excludeIndex) continue;
+    if (await cards.nth(i).isEnabled()) {
+      await cards.nth(i).click({ timeout: 5000 });
+      return i;
+    }
+  }
+  throw Error('No enabled date card available');
+}
+
 async function runBookingQA(browser) {
   const results = { commit: commitSha, generatedAt: new Date().toISOString(), profiles: {}, passed: 0, failed: 0 };
   for (const profile of profiles.filter((p) => p.name === 'desktop' || p.name === 'mobile')) {
@@ -254,7 +267,7 @@ async function runBookingQA(browser) {
       await check('B04-dates', async () => {
         const count = await cards.count();
         if (count !== 7) throw Error('Expected 7 date cards, got ' + count);
-        await cards.first().click();
+        await selectAvailableDate(cards);
       });
       await check('B05-week-navigation', async () => {
         const first = await cards.first().innerText();
@@ -274,7 +287,7 @@ async function runBookingQA(browser) {
         }
       });
       await check('B07-time-slots', async () => {
-        await cards.first().click();
+        await selectAvailableDate(cards);
         const buttons = dialog.locator('button').filter({ hasText: /^09:00|^10:00|^11:00|^12:00|^13:00|^15:00|^17:00|^19:00/ });
         const times = await dialog.locator('span').allTextContents();
         for (const t of ['09:00','10:00','11:00','12:00','13:00','15:00','17:00','19:00']) if (!times.includes(t)) throw Error('Missing ' + t);
@@ -325,7 +338,7 @@ async function runBookingQA(browser) {
       });
       await check('B11-email-validation', async () => {
         await dialog.locator('#modal-email').fill('not-an-email');
-        await cards.first().click();
+        await selectAvailableDate(cards);
         await dialog.locator('button').filter({ hasText: /^09:00/ }).click();
         const valid = await dialog.locator('#modal-email').evaluate((el) => el.checkValidity());
         if (valid) throw Error('Invalid email accepted');
@@ -343,7 +356,7 @@ async function runBookingQA(browser) {
       });
       await page.screenshot({ path: path.join(outputDir, 'booking-' + profile.name + '.png'), animations: 'disabled' });
       await check('B12-demo-success', async () => {
-        await cards.first().click();
+        await selectAvailableDate(cards);
         await dialog.locator('button').filter({ hasText: /^09:00/ }).click();
         await dialog.locator('button[type="submit"]').click();
         await dialog.getByText('QA Test', { exact: false }).first().waitFor({ timeout: 6000 });
@@ -454,7 +467,7 @@ async function runYG03AdditionalQA(browser) {
       });
       await check('M320-05', async () => {
         const cards = dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
-        await cards.first().click();
+        await selectAvailableDate(cards);
         const spans = await dialog.locator('span').allTextContents();
         const slots = ['09:00','10:00','11:00','12:00','13:00','15:00','17:00','19:00'];
         const missing = slots.filter(t=>!spans.includes(t));
@@ -551,7 +564,7 @@ async function runYG05LanguageQA(browser) {
             await dialog.locator('#modal-email').fill('qa@example.com');
             const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
             if(await cards.count()!==7)throw Error('Not seven date cards');
-            await cards.first().click();
+            await selectAvailableDate(cards);
             const spans=await dialog.locator('span').allTextContents();
             const missing=['09:00','10:00','11:00','12:00','13:00','15:00','17:00','19:00'].filter(t=>!spans.includes(t));
             if(missing.length)throw Error('Missing slots '+missing.join(','));
@@ -563,7 +576,7 @@ async function runYG05LanguageQA(browser) {
           await test('demo',async()=>{
             await dialog.locator('#modal-name').fill('QA Sample');
             await dialog.locator('#modal-email').fill('qa@example.com');
-            await dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/}).first().click();
+            await selectAvailableDate(dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/}));
             await dialog.locator('button').filter({hasText:/^09:00/}).first().click();
             await dialog.locator('button[type="submit"]').click();
             await dialog.getByText('QA Sample',{exact:false}).first().waitFor({timeout:7000});
@@ -672,7 +685,7 @@ async function runYG06PrepublishQA(browser) {
       });
       await check('D02-time-options',async()=>{
         const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
-        await cards.first().click();
+        await selectAvailableDate(cards);
         const spans=await dialog.locator('span').allTextContents();
         const expected=['09:00','10:00','11:00','12:00','13:00','15:00','17:00','19:00'];
         const missing=expected.filter(t=>!spans.includes(t));
@@ -693,10 +706,10 @@ async function runYG06PrepublishQA(browser) {
       });
       await check('D04-date-change',async()=>{
         const cards=dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/});
-        await cards.first().click();
+        const selectedIndex = await selectAvailableDate(cards);
         const slots=dialog.locator('button').filter({hasText:/^09:00/});
         await slots.first().click();
-        await cards.nth(1).click();
+        await selectAvailableDate(cards, selectedIndex);
         if(await cards.count()!==7)throw Error('Cards disappeared');
         return 'Date changed';
       });
@@ -708,7 +721,7 @@ async function runYG06PrepublishQA(browser) {
       await check('D06-demo',async()=>{
         await dialog.locator('#modal-name').fill('YG06 QA');
         await dialog.locator('#modal-email').fill('qa@example.com');
-        await dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/}).first().click();
+        await selectAvailableDate(dialog.locator('button').filter({hasText:/^\d{1,2}\/\d{1,2}/}));
         await dialog.locator('button').filter({hasText:/^09:00/}).first().click();
         await dialog.locator('button[type="submit"]').click();
         await dialog.getByText('YG06 QA',{exact:false}).first().waitFor({timeout:6500});
